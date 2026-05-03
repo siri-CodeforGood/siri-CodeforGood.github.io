@@ -1,0 +1,1395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <!-- Prevent flash of wrong theme on page load -->
+  <script>
+    (function(){
+      var t = localStorage.getItem('theme');
+      if (t === 'dark' || (!t && window.matchMedia('(prefers-color-scheme:dark)').matches))
+        document.documentElement.setAttribute('data-theme','dark');
+    })();
+  </script>
+  <title>Siri Naganoor – Software Engineer | Energy Tech</title>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  <style>
+    /* ── Reset & tokens ─────────────────────────────────────────── */
+    *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
+
+    :root {
+      --bg:       #f1f5f9;
+      --surface:  #ffffff;
+      --card:     #ffffff;
+      --border:   #e2e8f0;
+      --accent:   #2563eb;
+      --accent2:  #7c3aed;
+      --green:    #059669;
+      --yellow:   #b45309;
+      --red:      #dc2626;
+      --text:     #0f172a;
+      --muted:    #64748b;
+      --gradient: linear-gradient(135deg,#2563eb,#7c3aed);
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.65;
+    }
+
+    /* ── Scrollbar ──────────────────────────────────────────────── */
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg); }
+    ::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 3px; }
+
+    /* ── Navigation ─────────────────────────────────────────────── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      background: rgba(248,250,252,0.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      box-shadow: 0 1px 4px rgba(0,0,0,0.06);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 40px; height: 64px;
+    }
+    .nav-logo {
+      font-weight: 700; font-size: 1.1rem;
+      background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .nav-links { display:flex; gap:32px; list-style:none; }
+    .nav-links a {
+      color: var(--muted); text-decoration:none; font-size:.9rem;
+      transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-cta {
+      padding: 8px 20px;
+      background: var(--gradient);
+      border-radius: 8px;
+      font-size: .85rem; font-weight:600;
+      color: #fff; text-decoration:none;
+      transition: opacity .2s;
+    }
+    .nav-cta:hover { opacity:.85; }
+
+    /* ── Sections ───────────────────────────────────────────────── */
+    section { padding: 96px 40px; max-width: 1200px; margin: 0 auto; }
+    .section-label {
+      text-transform: uppercase; letter-spacing: .15em;
+      font-size:.75rem; color: var(--accent); font-weight:600;
+      margin-bottom:12px;
+    }
+    h2.section-heading {
+      font-size: clamp(1.8rem, 3vw, 2.6rem);
+      margin-bottom: 16px; font-weight: 700;
+    }
+    .section-sub { color: var(--muted); max-width: 640px; margin-bottom: 48px; }
+
+    /* ── Hero ───────────────────────────────────────────────────── */
+    #hero {
+      min-height: 100vh;
+      display: flex; flex-direction:column; justify-content:center;
+      padding-top: 64px;
+      background: linear-gradient(135deg, #eff6ff 0%, #f5f3ff 50%, #f8fafc 100%);
+    }
+    .hero-badge {
+      display:inline-flex; align-items:center; gap:8px;
+      background: rgba(37,99,235,.08);
+      border: 1px solid rgba(37,99,235,.22);
+      border-radius: 20px; padding: 6px 16px;
+      font-size:.8rem; color: var(--accent);
+      margin-bottom: 28px;
+    }
+    .hero-badge span { width:8px;height:8px;border-radius:50%;background:var(--green);
+      animation:pulse 2s infinite; }
+    @keyframes pulse { 0%,100%{opacity:1;transform:scale(1)} 50%{opacity:.6;transform:scale(1.3)} }
+
+    h1.hero-name {
+      font-size: clamp(2.4rem, 5vw, 4.5rem);
+      font-weight: 800; line-height: 1.1;
+      margin-bottom: 8px;
+    }
+    h1.hero-name .highlight {
+      background: var(--gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-title {
+      font-size: clamp(1rem, 2vw, 1.4rem);
+      color: var(--muted); margin-bottom: 20px; font-weight:400;
+    }
+    .hero-tagline {
+      font-size: clamp(1rem, 1.8vw, 1.2rem);
+      max-width: 620px; color: var(--text);
+      margin-bottom: 40px; opacity:.85;
+    }
+    .hero-actions { display:flex; gap:16px; flex-wrap:wrap; }
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--gradient);
+      border-radius: 10px;
+      font-size:.95rem; font-weight:600;
+      color: #fff; text-decoration:none;
+      transition: opacity .2s, transform .2s;
+    }
+    .btn-primary:hover { opacity:.88; transform:translateY(-2px); }
+    .btn-outline {
+      padding: 14px 32px;
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      font-size:.95rem; font-weight:600;
+      color: var(--text); text-decoration:none;
+      transition: border-color .2s, transform .2s;
+    }
+    .btn-outline:hover { border-color: var(--accent); transform:translateY(-2px); }
+
+    /* ── Stat bar ───────────────────────────────────────────────── */
+    .hero-stats {
+      display:flex; gap:48px; flex-wrap:wrap;
+      margin-top: 72px;
+      padding-top: 40px;
+      border-top: 1px solid var(--border);
+    }
+    .hero-stat-num {
+      font-size: 2.8rem; font-weight:800;
+      background: var(--gradient);
+      -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+    }
+    .hero-stat-label { font-size:.85rem; color:var(--muted); margin-top:2px; }
+
+    /* ── Context banner ─────────────────────────────────────────── */
+    .context-banner {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 40px;
+      display:grid; grid-template-columns: 1fr 1fr;
+      gap: 32px;
+    }
+    .context-item h3 { font-size:1.1rem; margin-bottom:10px; }
+    .context-item p { color:var(--muted); font-size:.9rem; }
+
+    /* ── Architecture diagram ───────────────────────────────────── */
+    .arch-diagram {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 40px;
+      font-family: 'Consolas', monospace; font-size:.82rem;
+      overflow-x:auto; line-height:1.8;
+    }
+    .arch-layer { margin-bottom: 20px; }
+    .arch-layer-title {
+      font-size:.7rem; text-transform:uppercase; letter-spacing:.12em;
+      color: var(--accent); margin-bottom:8px;
+    }
+    .arch-boxes { display:flex; flex-wrap:wrap; gap:10px; }
+    .arch-box {
+      padding: 8px 16px;
+      border-radius: 8px; font-size:.78rem; font-weight:600;
+    }
+    .arch-box.blue   { background:rgba(37,99,235,.08);  border:1px solid rgba(37,99,235,.25);  color:#1d4ed8; }
+    .arch-box.purple { background:rgba(124,58,237,.08); border:1px solid rgba(124,58,237,.25); color:#6d28d9; }
+    .arch-box.green  { background:rgba(5,150,105,.08);  border:1px solid rgba(5,150,105,.25);  color:#065f46; }
+    .arch-box.yellow { background:rgba(180,83,9,.08);   border:1px solid rgba(180,83,9,.25);   color:#92400e; }
+    .arch-box.red    { background:rgba(220,38,38,.08);  border:1px solid rgba(220,38,38,.25);  color:#991b1b; }
+    .arch-arrow { text-align:center; color:var(--muted); font-size:1.2rem; margin:8px 0; }
+
+    /* ── Project cards ──────────────────────────────────────────── */
+    .projects-grid { display:grid; gap:32px; }
+    .project-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px; padding: 36px;
+      transition: border-color .3s, transform .3s;
+      position:relative; overflow:hidden;
+    }
+    .project-card::before {
+      content:''; position:absolute; top:0; left:0; right:0; height:3px;
+      background: var(--gradient);
+    }
+    .project-card:hover { border-color: rgba(37,99,235,.4); transform:translateY(-4px); box-shadow: 0 8px 30px rgba(37,99,235,.1); }
+    .project-header {
+      display:flex; align-items:flex-start;
+      justify-content:space-between; gap:16px;
+      margin-bottom:16px;
+    }
+    .project-title { font-size:1.35rem; font-weight:700; margin-bottom:4px; }
+    .project-subtitle { color:var(--muted); font-size:.9rem; }
+    .project-badge {
+      padding: 4px 12px; border-radius:20px;
+      font-size:.75rem; font-weight:600; white-space:nowrap;
+    }
+    .badge-infra    { background:rgba(37,99,235,.1);  color:#1d4ed8; }
+    .badge-platform { background:rgba(124,58,237,.1); color:#6d28d9; }
+    .badge-data     { background:rgba(5,150,105,.1);  color:#065f46; }
+    .badge-ai       { background:rgba(180,83,9,.1);   color:#92400e; }
+    .badge-ops      { background:rgba(220,38,38,.1);  color:#991b1b; }
+
+    .project-problem {
+      background: rgba(220,38,38,.06);
+      border-left: 3px solid var(--red);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px; margin-bottom:16px; font-size:.88rem;
+    }
+    .project-problem strong { color: var(--red); }
+    .project-solution {
+      background: rgba(5,150,105,.07);
+      border-left: 3px solid var(--green);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px; margin-bottom:16px; font-size:.88rem;
+    }
+    .project-solution strong { color: var(--green); }
+    .project-outcome {
+      background: rgba(37,99,235,.07);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 8px 8px 0;
+      padding: 12px 16px; margin-bottom:24px; font-size:.88rem;
+    }
+    .project-outcome strong { color: var(--accent); }
+
+    .project-tech { display:flex; flex-wrap:wrap; gap:8px; }
+    .tech-chip {
+      padding: 4px 12px;
+      background: #f8fafc;
+      border: 1px solid var(--border);
+      border-radius: 6px; font-size:.78rem; color:var(--muted);
+    }
+
+    /* metrics inside projects */
+    .project-metrics {
+      display:flex; gap:24px; flex-wrap:wrap;
+      margin-bottom: 24px;
+    }
+    .metric { text-align:center; }
+    .metric-val {
+      font-size:1.8rem; font-weight:800;
+      background: var(--gradient);
+      -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+    }
+    .metric-lbl { font-size:.75rem; color:var(--muted); }
+
+    /* ── 2026 initiatives ──────────────────────────────────────── */
+    .initiatives-grid {
+      display:grid;
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+      gap: 20px;
+    }
+    .initiative-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px; padding: 24px;
+      transition: border-color .3s;
+    }
+    .initiative-card:hover { border-color: rgba(37,99,235,.4); box-shadow: 0 4px 16px rgba(37,99,235,.08); }
+    .initiative-icon { font-size:1.6rem; margin-bottom:12px; }
+    .initiative-title { font-size:1rem; font-weight:700; margin-bottom:8px; }
+    .initiative-desc { font-size:.85rem; color:var(--muted); line-height:1.6; }
+    .initiative-status {
+      display:inline-block; margin-top:12px;
+      padding:3px 10px; border-radius:12px;
+      font-size:.72rem; font-weight:600;
+    }
+    .status-done   { background:rgba(5,150,105,.1);   color:#065f46; }
+    .status-active { background:rgba(37,99,235,.1);   color:#1d4ed8; }
+    .status-poc    { background:rgba(180,83,9,.1);    color:#92400e; }
+
+    /* ── Production reliability ─────────────────────────────────── */
+    .reliability-grid {
+      display:grid; grid-template-columns: repeat(auto-fit,minmax(280px,1fr)); gap:16px;
+    }
+    .reliability-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius:12px; padding:20px;
+    }
+    .reliability-item .ri-icon { font-size:1.4rem; margin-bottom:8px; }
+    .reliability-item .ri-title { font-weight:600; margin-bottom:6px; font-size:.95rem; }
+    .reliability-item .ri-desc { font-size:.83rem; color:var(--muted); }
+
+    /* ── Skills / tech ─────────────────────────────────────────── */
+    .skills-grid {
+      display:grid; grid-template-columns: repeat(auto-fit,minmax(200px,1fr)); gap:20px;
+    }
+    .skill-group { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:20px; }
+    .skill-group-title { font-size:.8rem; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:14px; }
+    .skill-tags { display:flex; flex-wrap:wrap; gap:6px; }
+    .skill-tag {
+      padding:4px 10px; border-radius:6px;
+      font-size:.78rem;
+      background:#f8fafc; border:1px solid var(--border);
+      color:var(--text);
+    }
+
+    /* ── Timeline ───────────────────────────────────────────────── */
+    .timeline { position:relative; padding-left:28px; }
+    .timeline::before {
+      content:''; position:absolute; left:6px; top:6px; bottom:0;
+      width:2px; background:var(--gradient);
+    }
+    .tl-item { position:relative; margin-bottom:32px; }
+    .tl-item::before {
+      content:''; position:absolute; left:-26px; top:6px;
+      width:12px; height:12px; border-radius:50%;
+      background:var(--green); box-shadow:0 0 0 3px var(--card);
+    }
+    .tl-date { font-size:.78rem; color:var(--accent); font-weight:600; margin-bottom:4px; }
+    .tl-title { font-weight:700; margin-bottom:6px; }
+    .tl-body { font-size:.88rem; color:var(--muted); }
+
+    /* ── Charts section ─────────────────────────────────────────── */
+    .charts-row {
+      display:grid; grid-template-columns: repeat(auto-fit,minmax(320px,1fr));
+      gap:24px;
+    }
+    .chart-card {
+      background:var(--card); border:1px solid var(--border);
+      border-radius:12px; padding:24px;
+    }
+    .chart-card h3 { font-size:.95rem; margin-bottom:16px; color:var(--muted); }
+
+    /* ── Contact ────────────────────────────────────────────────── */
+    #contact {
+      text-align:center;
+      background: var(--card);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      max-width:100%; padding:80px 40px;
+    }
+    .contact-links { display:flex; justify-content:center; gap:24px; flex-wrap:wrap; margin-top:32px; }
+    .contact-link {
+      padding:12px 28px; border-radius:10px;
+      border:1px solid var(--border);
+      color:var(--text); text-decoration:none; font-size:.9rem;
+      display:flex; align-items:center; gap:8px;
+      transition: border-color .2s, transform .2s;
+    }
+    .contact-link:hover { border-color:var(--accent); transform:translateY(-2px); }
+
+    /* ── Footer ─────────────────────────────────────────────────── */
+    footer {
+      text-align:center; padding:32px 40px;
+      font-size:.8rem; color:var(--muted);
+    }
+
+    /* ── Utilities ──────────────────────────────────────────────── */
+    .divider { border:none; border-top:1px solid var(--border); margin:0; }
+    .highlight-box {
+      background:rgba(37,99,235,.06);
+      border:1px solid rgba(37,99,235,.18);
+      border-radius:12px; padding:20px 24px;
+      margin-bottom:24px;
+    }
+    ul.styled { list-style:none; }
+    ul.styled li {
+      padding:6px 0; font-size:.9rem; color:var(--muted);
+      display:flex; align-items:flex-start; gap:10px;
+    }
+    ul.styled li::before { content:'→'; color:var(--accent); flex-shrink:0; }
+
+    /* ── Responsive ─────────────────────────────────────────────── */
+    @media (max-width:768px) {
+      nav { padding:0 20px; }
+      .nav-links { display:none; }
+      section { padding:72px 20px; }
+      .context-banner { grid-template-columns:1fr; }
+      .hero-stats { gap:28px; }
+      #contact { padding:60px 20px; }
+    }
+
+    /* ── Theme toggle button ─────────────────────────────────── */
+    .theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 6px 10px;
+      cursor: pointer;
+      font-size: 1rem; line-height: 1;
+      color: var(--text);
+      transition: border-color .2s, background .2s;
+    }
+    .theme-toggle:hover { border-color: var(--accent); background: var(--card); }
+
+    /* ── Dark mode overrides ─────────────────────────────────── */
+    [data-theme="dark"] {
+      --bg:       #090f1a;
+      --surface:  #111827;
+      --card:     #1a2332;
+      --border:   #1f2d40;
+      --accent:   #5b8dee;
+      --accent2:  #a78bfa;
+      --green:    #34d399;
+      --yellow:   #fbbf24;
+      --red:      #f87171;
+      --text:     #e2e8f0;
+      --muted:    #64748b;
+      --gradient: linear-gradient(135deg,#5b8dee,#a78bfa);
+    }
+    [data-theme="dark"] ::-webkit-scrollbar-thumb { background: var(--border); }
+    [data-theme="dark"] nav {
+      background: rgba(9,15,26,0.92);
+      box-shadow: none;
+    }
+    [data-theme="dark"] #hero {
+      background: linear-gradient(135deg, #0c1628 0%, #130d2e 50%, #090f1a 100%);
+    }
+    [data-theme="dark"] .hero-badge {
+      background: rgba(91,141,238,.12);
+      border-color: rgba(91,141,238,.25);
+    }
+    [data-theme="dark"] .arch-box.blue   { background:rgba(91,141,238,.15);  border-color:rgba(91,141,238,.3);  color:#93c5fd; }
+    [data-theme="dark"] .arch-box.purple { background:rgba(167,139,250,.15); border-color:rgba(167,139,250,.3); color:#c4b5fd; }
+    [data-theme="dark"] .arch-box.green  { background:rgba(52,211,153,.15);  border-color:rgba(52,211,153,.3);  color:#6ee7b7; }
+    [data-theme="dark"] .arch-box.yellow { background:rgba(251,191,36,.15);  border-color:rgba(251,191,36,.3);  color:#fde68a; }
+    [data-theme="dark"] .arch-box.red    { background:rgba(248,113,113,.15); border-color:rgba(248,113,113,.3); color:#fca5a5; }
+    [data-theme="dark"] .project-card:hover  { border-color:rgba(91,141,238,.4); box-shadow:none; }
+    [data-theme="dark"] .badge-infra    { background:rgba(91,141,238,.2);  color:#93c5fd; }
+    [data-theme="dark"] .badge-platform { background:rgba(167,139,250,.2); color:#c4b5fd; }
+    [data-theme="dark"] .badge-data     { background:rgba(52,211,153,.2);  color:#6ee7b7; }
+    [data-theme="dark"] .badge-ai       { background:rgba(251,191,36,.2);  color:#fde68a; }
+    [data-theme="dark"] .badge-ops      { background:rgba(248,113,113,.2); color:#fca5a5; }
+    [data-theme="dark"] .tech-chip      { background:rgba(255,255,255,.05); }
+    [data-theme="dark"] .initiative-card:hover { border-color:rgba(91,141,238,.4); box-shadow:none; }
+    [data-theme="dark"] .status-done    { background:rgba(52,211,153,.15);  color:var(--green); }
+    [data-theme="dark"] .status-active  { background:rgba(91,141,238,.15);  color:var(--accent); }
+    [data-theme="dark"] .status-poc     { background:rgba(251,191,36,.15);  color:var(--yellow); }
+    [data-theme="dark"] .skill-tag      { background:rgba(255,255,255,.05); }
+    [data-theme="dark"] .highlight-box  { background:rgba(91,141,238,.08);  border-color:rgba(91,141,238,.2); }
+    [data-theme="dark"] .project-problem  { background:rgba(248,113,113,.07); }
+    [data-theme="dark"] .project-solution { background:rgba(52,211,153,.07); }
+    [data-theme="dark"] .project-outcome  { background:rgba(91,141,238,.07); }
+  </style>
+</head>
+<body>
+
+<!-- ── Navigation ─────────────────────────────────────────────── -->
+<nav>
+  <div class="nav-logo">Siri Naganoor</div>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#projects">Projects</a></li>
+    <li><a href="#2026">2026 Work</a></li>
+    <li><a href="#reliability">Reliability</a></li>
+    <li><a href="#experience">Experience</a></li>
+    <li><a href="#skills">Skills</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+  <div style="display:flex;align-items:center;gap:8px;">
+    <a class="nav-cta" href="performance-dashboard.html" target="_blank">📊 Full Dashboard</a>
+    <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark / light mode">🌙</button>
+  </div>
+</nav>
+
+<!-- ── Hero ─────────────────────────────────────────────────────── -->
+<section id="hero">
+  <div class="hero-badge">
+    <span></span>
+    Software Developer · Meltek Inc. · Jan 2024 – Present · Sunnyvale, CA
+  </div>
+  <h1 class="hero-name">
+    <span class="highlight">Siri</span><br>Siddalingappa Naganoor
+  </h1>
+  <p class="hero-title">Backend Engineer · Cloud Systems · Data Pipelines · AI Experiments</p>
+  <p class="hero-tagline">
+    Building scalable automation systems for real-world energy problems — reduced customer payout time from 6 weeks to &lt;24 hours, processing 10M+ records/month across utility data pipelines, demand response platforms, and cloud infrastructure.
+  </p>
+  <div class="hero-actions">
+    <a class="btn-primary" href="#projects">View Key Projects</a>
+    <a class="btn-outline" href="#2026">2026 Initiatives</a>
+  </div>
+  <div class="hero-stats">
+    <div>
+      <div class="hero-stat-num" id="stat-tasks">0</div>
+      <div class="hero-stat-label">Tasks Completed (Jan–Nov 2025)</div>
+    </div>
+    <div>
+      <div class="hero-stat-num" id="stat-sp">0</div>
+      <div class="hero-stat-label">Story Points Delivered</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">10M+</div>
+      <div class="hero-stat-label">Records/Month Processed</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">6wk→24h</div>
+      <div class="hero-stat-label">Payout Time Reduction</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">80%</div>
+      <div class="hero-stat-label">User Responsiveness Gain</div>
+    </div>
+    <div>
+      <div class="hero-stat-num">99.9%</div>
+      <div class="hero-stat-label">Platform Uptime</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── About / Context ─────────────────────────────────────────── -->
+<section id="about">
+  <div class="section-label">The Context</div>
+  <h2 class="section-heading">Why This Work Matters</h2>
+  <p class="section-sub">Energy demand spikes put stress on the grid. Utilities need customers to reduce usage at peak times — but the systems connecting utilities, devices, and customers are slow, manual, and fragmented. My work at Meltek is to fix that.</p>
+
+  <div class="context-banner">
+    <div class="context-item">
+      <h3>🏢 Role at Meltek</h3>
+      <p>Software Development Engineer owning backend systems, cloud workflows, data pipelines, and platform reliability. Working across product, operations, and infrastructure with full end-to-end ownership — not just tickets.</p>
+    </div>
+    <div class="context-item">
+      <h3>⚡ The Energy Problem</h3>
+      <p>Demand Response programs pay customers to reduce electricity usage during grid stress events. Making this work requires real-time data from utilities, reliable device dispatch, accurate settlements, and fast notifications — all automated.</p>
+    </div>
+    <div class="context-item">
+      <h3>🎯 My Focus</h3>
+      <p>Turning complex utility integrations and cloud workflows into reliable, scalable systems. From migrating millions of rows with zero data loss to building enterprise platforms for ConEd from scratch.</p>
+    </div>
+    <div class="context-item">
+      <h3>🧪 My Edge</h3>
+      <p>I don't just build features — I fix production incidents, optimize for scale, modernize legacy infrastructure, and explore AI-powered tooling to simplify complex systems. I combine depth with delivery speed.</p>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Architecture ────────────────────────────────────────────── -->
+<section id="architecture">
+  <div class="section-label">System Overview</div>
+  <h2 class="section-heading">Platform Architecture</h2>
+  <p class="section-sub">A simplified view of the systems I built and maintain at Meltek — spanning utility data ingestion, demand response orchestration, and user-facing platforms.</p>
+
+  <div class="arch-diagram">
+    <div class="arch-layer">
+      <div class="arch-layer-title">⚡ Utility Data Sources</div>
+      <div class="arch-boxes">
+        <div class="arch-box blue">ConEd GBC (Green Button Connect)</div>
+        <div class="arch-box blue">ConEd DRMS API</div>
+        <div class="arch-box blue">PSEG / O&amp;R APIs</div>
+        <div class="arch-box blue">Enode (Device Control)</div>
+        <div class="arch-box blue">Kasa API (Smart Plugs)</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ webhooks · polling · OAuth token refresh</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">☁️ Cloud Processing Layer (Azure)</div>
+      <div class="arch-boxes">
+        <div class="arch-box purple">Azure Function Apps (Python)</div>
+        <div class="arch-box purple">Django Backend (Celery + Redis)</div>
+        <div class="arch-box purple">Azure Container Apps (autoscaling)</div>
+        <div class="arch-box purple">CI/CD — GitHub Actions + Alembic</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ async DB pooling · interval data · enrollment flows</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">💾 Data Layer</div>
+      <div class="arch-boxes">
+        <div class="arch-box green">PostgreSQL (migrated from MySQL)</div>
+        <div class="arch-box green">Interval / Realtime Data Tables</div>
+        <div class="arch-box green">Enrollment &amp; User Records</div>
+        <div class="arch-box green">Settlement &amp; Payment Records</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ dispatches · notifications · payments</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">📲 Output Channels</div>
+      <div class="arch-boxes">
+        <div class="arch-box yellow">Meltek App (Next.js + React)</div>
+        <div class="arch-box yellow">ConEd DRMS Portal</div>
+        <div class="arch-box yellow">Admin Dashboards</div>
+        <div class="arch-box yellow">SendGrid Emails</div>
+        <div class="arch-box yellow">Twilio SMS</div>
+        <div class="arch-box yellow">Stripe Payments</div>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ monitoring</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">🔍 Observability</div>
+      <div class="arch-boxes">
+        <div class="arch-box red">Sentry (errors)</div>
+        <div class="arch-box red">Application Insights</div>
+        <div class="arch-box red">PostHog (analytics)</div>
+        <div class="arch-box red">Drata (SOC 2)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Key Projects ────────────────────────────────────────────── -->
+<section id="projects">
+  <div class="section-label">Flagship Work</div>
+  <h2 class="section-heading">Key Projects</h2>
+  <p class="section-sub">Selected for depth, impact, and engineering challenge. Each represents end-to-end ownership — from design through production.</p>
+
+  <div class="projects-grid">
+
+    <!-- Project 0: QuickPayConnect -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">QuickPayConnect — Automated Payout System</div>
+          <div class="project-subtitle">Reduced customer payout time from 6 weeks to under 24 hours</div>
+        </div>
+        <span class="project-badge badge-platform">Headline Achievement</span>
+      </div>
+      <div class="project-metrics">
+        <div class="metric"><div class="metric-val">6wk</div><div class="metric-lbl">Before:<br>Payout Time</div></div>
+        <div class="metric"><div class="metric-val">&lt;24h</div><div class="metric-lbl">After:<br>Payout Time</div></div>
+        <div class="metric"><div class="metric-val">10M+</div><div class="metric-lbl">Records/Month<br>Processed</div></div>
+        <div class="metric"><div class="metric-val">99.9%</div><div class="metric-lbl">Platform<br>Uptime</div></div>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> Customer payouts for energy performance took up to 6 weeks due to manual processes — downloading utility data, validating performance, calculating earnings, and initiating transfers. Every step was human-operated and error-prone.</div>
+      <div class="project-solution"><strong>Solution:</strong> Built QuickPayConnect end-to-end: integrated GBC utility data APIs to automatically pull interval energy data, engineered Celery async task pipelines for automated performance analysis, automated payout calculation, and built the core dispatch system using Enode webhooks replacing all manual processes.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> Payout time cut from 6 weeks to under 24 hours. System handles 10M+ records/month. Platform maintains 99.9%+ uptime. 80% increase in user responsiveness. This is now the core revenue engine of Meltek.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Python</span><span class="tech-chip">Django</span><span class="tech-chip">Celery</span>
+        <span class="tech-chip">PostgreSQL</span><span class="tech-chip">Azure Functions</span>
+        <span class="tech-chip">GBC API</span><span class="tech-chip">Enode</span><span class="tech-chip">Webhooks</span>
+      </div>
+    </div>
+
+    <!-- Project 1: ConEd DRMS -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">ConEd DRMS — Enterprise Demand Response Platform</div>
+          <div class="project-subtitle">Built an entire utility-grade platform from zero to production</div>
+        </div>
+        <span class="project-badge badge-platform">Enterprise Platform</span>
+      </div>
+      <div class="project-metrics">
+        <div class="metric"><div class="metric-val">2</div><div class="metric-lbl">Utility Programs<br>(Electric + Gas)</div></div>
+        <div class="metric"><div class="metric-val">6+</div><div class="metric-lbl">Platform Modules<br>Built</div></div>
+        <div class="metric"><div class="metric-val">0</div><div class="metric-lbl">Downtime<br>on Launch</div></div>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> ConEd needed a Demand Response Management System for their customers — with enrollment, device control, event management, and an admin console. Nothing existed.</div>
+      <div class="project-solution"><strong>Solution:</strong> Built the complete DRMS platform end-to-end: Admin Event Management Dashboard, Enrollment Management, Device Lookup, full New User Signup Flow (Electric &amp; Gas), User Dashboard, Device Connection (Enode), Dispatch Webhook, DR Demo Simulation Dashboard, and Post-Event data flows.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> Production-grade platform serving ConEd's DR program. Identified and reported multiple critical data quality issues in ConEd's own GBC platform (factor discrepancies, missing intervals, net block issues) — proactive communication appreciated by ConEd team.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Python</span><span class="tech-chip">Django</span><span class="tech-chip">PostgreSQL</span>
+        <span class="tech-chip">Azure Functions</span><span class="tech-chip">Next.js</span><span class="tech-chip">Enode</span>
+        <span class="tech-chip">GBC API</span><span class="tech-chip">Webhooks</span><span class="tech-chip">REST APIs</span>
+      </div>
+    </div>
+
+    <!-- Project 2: DB Migration -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">MySQL → PostgreSQL Migration at Scale</div>
+          <div class="project-subtitle">Zero data loss migration of millions of rows of production interval data</div>
+        </div>
+        <span class="project-badge badge-data">Data Engineering</span>
+      </div>
+      <div class="project-metrics">
+        <div class="metric"><div class="metric-val">0</div><div class="metric-lbl">Data Loss</div></div>
+        <div class="metric"><div class="metric-val">M+</div><div class="metric-lbl">Interval Rows<br>Migrated</div></div>
+        <div class="metric"><div class="metric-val">1</div><div class="metric-lbl">DB Engine<br>Replaced</div></div>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> The entire production database ran on MySQL. Scaling, cost, and feature requirements demanded PostgreSQL. A failed migration would mean data loss, downtime, or corrupted production state.</div>
+      <div class="project-solution"><strong>Solution:</strong> Designed and executed a comprehensive migration strategy including new schema design, data validation scripts, interval data migration with deduplication logic, and Alembic CI/CD pipeline for ongoing schema management. Environment separation (dev/prod) established during the process.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> Complete zero-downtime migration. Established Alembic as the migration standard with automated CI/CD integration. Set the data infrastructure foundation for all subsequent platform work.</div>
+      <div class="project-tech">
+        <span class="tech-chip">PostgreSQL</span><span class="tech-chip">MySQL</span><span class="tech-chip">Alembic</span>
+        <span class="tech-chip">Python</span><span class="tech-chip">SQL</span><span class="tech-chip">CI/CD</span>
+        <span class="tech-chip">GitHub Actions</span>
+      </div>
+    </div>
+
+    <!-- Project 3: Azure Modernization -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">Azure Infrastructure Modernization &amp; Cost Optimization</div>
+          <div class="project-subtitle">Full phaseout of Logic Apps — migrated everything to Function Apps</div>
+        </div>
+        <span class="project-badge badge-infra">Infrastructure</span>
+      </div>
+      <div class="project-metrics">
+        <div class="metric"><div class="metric-val">100%</div><div class="metric-lbl">Logic Apps<br>Phased Out</div></div>
+        <div class="metric"><div class="metric-val">↓</div><div class="metric-lbl">Azure Costs<br>Reduced</div></div>
+        <div class="metric"><div class="metric-val">+</div><div class="metric-lbl">Reliability &amp;<br>Performance</div></div>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> Legacy Consumption Logic Apps had reliability, cost, and scalability issues. The Meltek-GBC Logic App and several others were creating maintenance burden and unnecessary Azure spend.</div>
+      <div class="project-solution"><strong>Solution:</strong> Migrated Consumption Logic Apps to Standard Logic Apps first, then systematically converted all remaining Logic Apps to Azure Function Apps. Decommissioned Meltek-GBC Logic App, converted Non-GBC-Performance-Calculation-2, and completed full phaseout. Added DB connection recycling across all flows to prevent autoscaling from connection exhaustion.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> Full infrastructure modernization. Significant cost reduction. Improved reliability, observability, and maintainability across all cloud workflows. Celery scaling now based on CPU metrics with proper health checks.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Azure Functions</span><span class="tech-chip">Azure Logic Apps</span>
+        <span class="tech-chip">Azure Container Apps</span><span class="tech-chip">Celery</span>
+        <span class="tech-chip">Redis</span><span class="tech-chip">Docker</span><span class="tech-chip">Application Insights</span>
+      </div>
+    </div>
+
+    <!-- Project 4: Production Reliability -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">Production Reliability Engineering</div>
+          <div class="project-subtitle">Diagnosing and fixing critical production incidents across DB, email, SMS, and cloud routing</div>
+        </div>
+        <span class="project-badge badge-ops">Production Ops</span>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> Multiple critical production incidents: FunctionApp timeouts from DB connection exhaustion (PROD-4337, PROD-4352), Microsoft domain email delivery failure on July 17th, Twilio events routed to dev instead of prod, phone-number lookup hitting dev backend, and unnecessary backend autoscaling from missing DB connection recycling in enrollment flows.</div>
+      <div class="project-solution">
+        <strong>Solution — layered fixes:</strong>
+        <ul class="styled" style="margin-top:8px;">
+          <li>Implemented PostgreSQL async query helpers with connection pooling — eliminated FunctionApp timeouts</li>
+          <li>Separate pooling in postgres.py for generic vs webhook use cases</li>
+          <li>get_postgres_connection() returns pool with connection — updated all interval recurring flows</li>
+          <li>Debugged SendGrid config for Yahoo/AOL &amp; Microsoft domain delivery failures</li>
+          <li>Fixed Twilio event routing — dev traffic now properly isolated from prod</li>
+          <li>Fixed phone-number lookup events sent to dev instead of prod</li>
+          <li>Added DB connection recycling to bulk &amp; enrollment flows — stopped unnecessary container scaling</li>
+        </ul>
+      </div>
+      <div class="project-outcome"><strong>Outcome:</strong> All production incidents resolved. DB connection exhaustion eliminated. Email delivery restored for all domains. Autoscaling normalized. Monitoring in place to prevent recurrence.</div>
+      <div class="project-tech">
+        <span class="tech-chip">PostgreSQL pooling</span><span class="tech-chip">Python async</span>
+        <span class="tech-chip">SendGrid</span><span class="tech-chip">Twilio</span>
+        <span class="tech-chip">Azure Container Apps</span><span class="tech-chip">Sentry</span>
+      </div>
+    </div>
+
+    <!-- Project 5: DR Event Management -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">Summer 2025 DR Season — End-to-End Event Management</div>
+          <div class="project-subtitle">Complete automation of demand response event workflows</div>
+        </div>
+        <span class="project-badge badge-data">Demand Response</span>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> Demand response events require precise orchestration: dispatch signals to devices, notifications to customers, event extensions, cancellations, and post-event settlements — all in real time, all reliably.</div>
+      <div class="project-solution"><strong>Solution:</strong> Built full DR event management system: dispatch change workflows, ConEd event cancellation process, DR event extension workflow, Summer 2025 notification improvements, post-event data flow fixes (adjusted to new event call timelines), event stats dashboard for admin (GBC + non-GBC users), and a DR Demo simulation dashboard for presentations.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> Complete Summer 2025 DR season managed end-to-end. Processed June settlement discrepancy files. Admin dashboard provides real-time visibility into event performance across all user segments.</div>
+      <div class="project-tech">
+        <span class="tech-chip">Python</span><span class="tech-chip">Azure Functions</span>
+        <span class="tech-chip">ConEd API</span><span class="tech-chip">Enode</span>
+        <span class="tech-chip">SendGrid</span><span class="tech-chip">Twilio</span>
+        <span class="tech-chip">Django</span><span class="tech-chip">React</span>
+      </div>
+    </div>
+
+    <!-- Project 6: NL to SQL -->
+    <div class="project-card">
+      <div class="project-header">
+        <div>
+          <div class="project-title">Natural Language → SQL POC</div>
+          <div class="project-subtitle">AI-powered query generation over production-scale schemas</div>
+        </div>
+        <span class="project-badge badge-ai">AI Innovation</span>
+      </div>
+      <div class="project-problem"><strong>Problem:</strong> Non-technical teammates couldn't query the database directly. Writing SQL for complex energy data schemas (enrollments, intervals, settlements) requires deep domain knowledge.</div>
+      <div class="project-solution"><strong>Solution:</strong> Built a working POC that takes natural language questions, understands the schema context, generates valid SQL, and executes it. Combines LLM capabilities with schema-aware prompting for the specific Meltek data model.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> Working prototype demonstrating how to democratize data access. Positions Meltek for AI-assisted operations. Foundation for future AI-powered admin tooling.</div>
+      <div class="project-tech">
+        <span class="tech-chip">LLMs</span><span class="tech-chip">Python</span><span class="tech-chip">PostgreSQL</span>
+        <span class="tech-chip">Schema prompting</span><span class="tech-chip">AI/ML</span>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── 2026 Initiatives ────────────────────────────────────────── -->
+<section id="2026">
+  <div class="section-label">2026 Work</div>
+  <h2 class="section-heading">2026 Initiatives</h2>
+  <p class="section-sub">New work in 2026 expanding the platform's reach, reliability, and intelligence.</p>
+
+  <div class="initiatives-grid">
+
+    <div class="initiative-card">
+      <div class="initiative-icon">🔌</div>
+      <div class="initiative-title">Kasa API Integration</div>
+      <div class="initiative-desc">Built integration with TP-Link Kasa smart plug API enabling device control and monitoring for non-Enode customers. Expands DR participation to a wider set of smart home devices.</div>
+      <span class="initiative-status status-done">Completed</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">🗺️</div>
+      <div class="initiative-title">NYC 5-Borough Lead Generation</div>
+      <div class="initiative-desc">Built web scraping system to generate ConEd-style leads across all 5 NYC boroughs (Manhattan, Brooklyn, Queens, Bronx, Staten Island). Powers targeted customer acquisition campaigns.</div>
+      <span class="initiative-status status-done">Completed</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">📊</div>
+      <div class="initiative-title">Admin Signup Source Dashboard</div>
+      <div class="initiative-desc">Added analytics chart to Admin page showing daily signups by source: referrals, utility site, social media, and Meltek campaigns. Enables data-driven growth decisions.</div>
+      <span class="initiative-status status-done">Completed</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">🔗</div>
+      <div class="initiative-title">UTM Parameter Persistence Fix</div>
+      <div class="initiative-desc">Diagnosed and fixed UTM parameters being cleared during page navigation in the Meltek App. Ensures attribution data is preserved throughout the entire user signup funnel.</div>
+      <span class="initiative-status status-done">Completed</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">🧩</div>
+      <div class="initiative-title">GBC Data Upload &amp; Insights POC</div>
+      <div class="initiative-desc">POC for Multi-Utility feature: users upload GBC (Green Button Connect) data files, system processes interval data and generates consumption insights. Foundation for utility-agnostic enrollment.</div>
+      <span class="initiative-status status-poc">POC Complete</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">✉️</div>
+      <div class="initiative-title">AI-Powered Email Template Manager</div>
+      <div class="initiative-desc">Built AI-powered email template management system with SendGrid integration. Templates can be generated, edited, and A/B tested with LLM assistance. Replaces manual template management.</div>
+      <span class="initiative-status status-active">In Progress</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">🌐</div>
+      <div class="initiative-title">Google Translate on meltek.com</div>
+      <div class="initiative-desc">Integrated Google Translation widget on meltek.com with no-translate applied to proper nouns and statistics. Makes the platform accessible to non-English speaking utility customers.</div>
+      <span class="initiative-status status-done">Completed</span>
+    </div>
+
+    <div class="initiative-card">
+      <div class="initiative-icon">🔧</div>
+      <div class="initiative-title">Autoscaling Root-Cause Fix</div>
+      <div class="initiative-desc">Diagnosed root cause of unnecessary backend container autoscaling: missing DB connection recycling in bulk + enrollment flows, Twilio + phone-lookup dev routing, and excessive ConEd token refresh. All fixed systematically.</div>
+      <span class="initiative-status status-done">Completed</span>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Production Reliability Detail ──────────────────────────── -->
+<section id="reliability">
+  <div class="section-label">Engineering Depth</div>
+  <h2 class="section-heading">Production Reliability &amp; Systems Thinking</h2>
+  <p class="section-sub">The work that doesn't always show up in feature demos — but keeps everything running at scale.</p>
+
+  <div class="reliability-grid">
+    <div class="reliability-item">
+      <div class="ri-icon">🏊</div>
+      <div class="ri-title">Database Connection Pooling</div>
+      <div class="ri-desc">Separate pooling architecture for generic vs webhook use cases. Async query helpers prevent FunctionApp timeouts. DB connection recycling in all DB-heavy flows prevents container scaling from connection exhaustion.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">⚙️</div>
+      <div class="ri-title">Celery + Redis Scaling</div>
+      <div class="ri-desc">Configured Celery autoscaling based on CPU usage. Fixed Celery Beat health check failures. Debugged production container "Failed/Degraded" status in Azure Container Apps.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">📧</div>
+      <div class="ri-title">Email Deliverability</div>
+      <div class="ri-desc">Resolved critical email failures for Yahoo/AOL and Microsoft domains (outlook, msn, live, hotmail). Investigated SendGrid configuration, identified root causes, and implemented deliverability fixes.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">📱</div>
+      <div class="ri-title">SMS Reliability</div>
+      <div class="ri-desc">Debugged Twilio link shortening errors and error code patterns. Fixed event routing — Twilio events were being sent to dev backend, causing unnecessary load. All SMS flows now properly isolated per environment.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">🔀</div>
+      <div class="ri-title">Environment Isolation</div>
+      <div class="ri-desc">Fixed phone-number lookup events routed to dev instead of prod. Fixed communication-preference updates being sent to Bubble unnecessarily. Confirmed retry history in coned_user_enrollment table.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">🔐</div>
+      <div class="ri-title">Authentication &amp; Security</div>
+      <div class="ri-desc">Debugged and fixed Microsoft Auth issues. Resolved ConEd access-token refresh logic running in both dev and prod (risked token invalidation). Drata SOC 2 evidence uploads completed. Enrolled in security compliance workflows.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">🗃️</div>
+      <div class="ri-title">Data Integrity</div>
+      <div class="ri-desc">Filter duplicates within interval blocks API JSON response before comparison with interval blocks table. Resolved false duplicate enrollment records. Fixed Postgres DB intermittent disconnection. Processed BubbleUsers reference table migration.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">📦</div>
+      <div class="ri-title">Stripe Integration</div>
+      <div class="ri-desc">Implemented Stripe deposit functionality with embedded checkout, transaction fee handling, and webhook processing. New funds deposit feature shipped as part of Meltek App launch.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Performance Charts ──────────────────────────────────────── -->
+<section id="metrics">
+  <div class="section-label">By the Numbers</div>
+  <h2 class="section-heading">Performance Analytics</h2>
+  <div class="charts-row">
+    <div class="chart-card">
+      <h3>Work Distribution by Type</h3>
+      <canvas id="taskTypeChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Story Points by Category</h3>
+      <canvas id="storyPointsChart"></canvas>
+    </div>
+    <div class="chart-card">
+      <h3>Complexity Distribution</h3>
+      <canvas id="complexityChart"></canvas>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Timeline ────────────────────────────────────────────────── -->
+<section id="timeline">
+  <div class="section-label">Chronology</div>
+  <h2 class="section-heading">Recent Timeline</h2>
+  <p class="section-sub">A chronological view of the last few months of work.</p>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">May 2026</div>
+      <div class="tl-title">2026 Platform Expansion</div>
+      <div class="tl-body">Kasa API integration, NYC leads generation (5 boroughs), admin signup source dashboard, UTM parameter fix, Google Translate on meltek.com, autoscaling root-cause resolution, AI Email Template Manager POC.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">November 2025</div>
+      <div class="tl-title">App Launch &amp; Stripe Integration</div>
+      <div class="tl-body">Shipped new funds deposit feature with Stripe embedded checkout. Payment notifications for June/July events. Fixed Helpscout balance issues. BubbleUsers migration. PostgreSQL intermittent disconnection fix.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">October 2025</div>
+      <div class="tl-title">Infrastructure &amp; DRMS Development</div>
+      <div class="tl-body">Celery scaling setup, health check fixes. DLC dashboard devices section. Enode device linking. Enrollment management. Drata SOC 2 evidence uploads.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">September 2025</div>
+      <div class="tl-title">Settlement &amp; DR Demo</div>
+      <div class="tl-body">June settlement discrepancy processing. DR Event Demonstration Dashboard built. Device simulation service for demos. Dispatch webhook setup.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Summer 2025</div>
+      <div class="tl-title">DR Season Operations</div>
+      <div class="tl-body">Full Summer 2025 DR season managed end-to-end. Dispatch changes, event extensions, cancellations, post-event flows, admin event stats dashboard.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">July 2025</div>
+      <div class="tl-title">Critical Incident Resolution</div>
+      <div class="tl-body">Resolved Microsoft domain email failure on July 17th. Continued Yahoo/AOL deliverability fixes. Twilio routing and link shortening fixes.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Q2 2025</div>
+      <div class="tl-title">Data Pipelines &amp; GBC Integration</div>
+      <div class="tl-body">Historical &amp; realtime interval data flows completed. GBC migration to new version. Interval deduplication logic. TOD schemas. Trigger flows for retail customer data.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Q1 2025</div>
+      <div class="tl-title">Infrastructure Foundation</div>
+      <div class="tl-body">MySQL → PostgreSQL migration (zero data loss). Alembic CI/CD pipeline. Logic Apps → Standard migration begins. DB pooling implementation. ConEd DRMS platform development starts.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Skills ──────────────────────────────────────────────────── -->
+<section id="skills">
+  <div class="section-label">Tech Stack</div>
+  <h2 class="section-heading">Technologies &amp; Tools</h2>
+
+  <div class="skills-grid">
+    <div class="skill-group">
+      <div class="skill-group-title">Languages</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Python</span>
+        <span class="skill-tag">JavaScript</span>
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">Java</span>
+        <span class="skill-tag">C / C++</span>
+        <span class="skill-tag">MATLAB</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Backend &amp; APIs</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Django</span>
+        <span class="skill-tag">Celery</span>
+        <span class="skill-tag">Node.js</span>
+        <span class="skill-tag">Express.js</span>
+        <span class="skill-tag">GraphQL</span>
+        <span class="skill-tag">REST APIs</span>
+        <span class="skill-tag">Webhooks</span>
+        <span class="skill-tag">OAuth / JWT</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Cloud &amp; Infrastructure</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Azure Functions</span>
+        <span class="skill-tag">Azure Container Apps</span>
+        <span class="skill-tag">Azure Logic Apps</span>
+        <span class="skill-tag">Azure Data Factory</span>
+        <span class="skill-tag">Azure Key Vault</span>
+        <span class="skill-tag">Azure Bicep (IaC)</span>
+        <span class="skill-tag">Docker</span>
+        <span class="skill-tag">GitHub Actions</span>
+        <span class="skill-tag">CI/CD</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Data</div>
+      <div class="skill-tags">
+        <span class="skill-tag">PostgreSQL</span>
+        <span class="skill-tag">MySQL</span>
+        <span class="skill-tag">MongoDB</span>
+        <span class="skill-tag">Redis</span>
+        <span class="skill-tag">Alembic</span>
+        <span class="skill-tag">SQL</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Frontend</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Next.js</span>
+        <span class="skill-tag">React</span>
+        <span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">Tailwind CSS</span>
+        <span class="skill-tag">Bootstrap</span>
+        <span class="skill-tag">Bubble</span>
+        <span class="skill-tag">Webflow</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Integrations</div>
+      <div class="skill-tags">
+        <span class="skill-tag">GBC (Green Button)</span>
+        <span class="skill-tag">Enode</span>
+        <span class="skill-tag">Kasa API</span>
+        <span class="skill-tag">Stripe</span>
+        <span class="skill-tag">SendGrid</span>
+        <span class="skill-tag">Twilio</span>
+        <span class="skill-tag">Helpscout</span>
+        <span class="skill-tag">TikTok Discovery API</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">AI &amp; LLM Tools</div>
+      <div class="skill-tags">
+        <span class="skill-tag">OpenAI API</span>
+        <span class="skill-tag">Azure OpenAI</span>
+        <span class="skill-tag">GitHub Copilot</span>
+        <span class="skill-tag">MS Copilot Studio</span>
+        <span class="skill-tag">MCP (Model Context Protocol)</span>
+        <span class="skill-tag">Hugging Face</span>
+        <span class="skill-tag">NL → SQL</span>
+        <span class="skill-tag">AI Chatbots</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Observability &amp; DevTools</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Sentry</span>
+        <span class="skill-tag">Application Insights</span>
+        <span class="skill-tag">PostHog</span>
+        <span class="skill-tag">Drata (SOC 2)</span>
+        <span class="skill-tag">Splunk</span>
+        <span class="skill-tag">Jira</span>
+        <span class="skill-tag">Postman</span>
+        <span class="skill-tag">ServiceNow</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Domain</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Demand Response</span>
+        <span class="skill-tag">Energy Data</span>
+        <span class="skill-tag">Utility APIs</span>
+        <span class="skill-tag">Settlements</span>
+        <span class="skill-tag">Interval Data</span>
+        <span class="skill-tag">IoT / Embedded (ESP32)</span>
+        <span class="skill-tag">EEG Signal Processing</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Experience ──────────────────────────────────────────────── -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <h2 class="section-heading">Work Experience</h2>
+
+  <div class="timeline">
+
+    <div class="tl-item">
+      <div class="tl-date">Jan 2024 – Present · Remote, New York, USA</div>
+      <div class="tl-title">Software Developer — Meltek Inc.</div>
+      <div class="tl-body">
+        <ul class="styled" style="margin-top:6px;">
+          <li>Built QuickPayConnect — reduced customer payout time from 6 weeks to &lt;24 hours by integrating utility data systems and automating energy performance analysis.</li>
+          <li>Engineered scalable Django REST APIs and Celery async task pipelines handling 10M+ records/month using Azure, PostgreSQL, and cloud-native services.</li>
+          <li>Delivered full-stack features in Next.js across Meltek and DiscoTok (TikTok SaaS) — admin dashboards, onboarding flows, and i18n rollout across 5 locales — improving user responsiveness by 80%.</li>
+          <li>Built deployment infrastructure for Azure Logic Apps and Function Apps; resolved critical scalability issues via connection pooling and batch processing — ensuring 99.9%+ uptime.</li>
+          <li>Developed the core dispatch system using Enode, replacing manual processes with webhook-triggered alerts — resulting in 80% increase in user responsiveness.</li>
+          <li>Implemented structured logging, access auditing, and error alerting aligned with SOC 2 compliance.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">May 2023 – Aug 2023 · Remote (Intern)</div>
+      <div class="tl-title">Software Developer Intern — Meltek Inc.</div>
+      <div class="tl-body">
+        <ul class="styled" style="margin-top:6px;">
+          <li>Developed and deployed 10+ API-driven workflows using Bubble.io and Azure Logic Apps — achieving 99% message deliverability.</li>
+          <li>Identified and resolved critical production issues including looping payment retries and broken signup flows — reducing customer support load by 50%.</li>
+          <li>Contributed to early architecture of automated payout and dispatch systems now serving thousands of customers.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Jan 2021 – Aug 2022 · Bangalore, India</div>
+      <div class="tl-title">Senior Systems Engineer — Infosys Limited</div>
+      <div class="tl-body">
+        <ul class="styled" style="margin-top:6px;">
+          <li>Led development of a centralized Partner Management Portal for Infosys Domain Consulting Group, supporting a 59% YoY revenue increase in their product business.</li>
+          <li>Sole Full Stack Developer — owned end-to-end architecture, PoC design, and delivery using the MERN stack in an agile setting.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Oct 2019 – Dec 2020 · Bangalore, India</div>
+      <div class="tl-title">Systems Engineer — Infosys Limited</div>
+      <div class="tl-body">
+        <ul class="styled" style="margin-top:6px;">
+          <li>Developed backend services in Java for Allstate Insurance's Transformative Growth Portal (Phase 2), enhancing scalability and performance.</li>
+          <li>Independently built the Vehicular Insurance Line of Business (Phase 1) within one year — earning high client satisfaction and trust.</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="tl-item">
+      <div class="tl-date">Jan 2019 – Sept 2019 · Bangalore, India</div>
+      <div class="tl-title">Research Intern — Indian Institute of Science (IISc), BEES Lab</div>
+      <div class="tl-body">
+        Thesis: <em>Detection of Brain Anomalies in Real-Time Using P300</em> · Supervisor: Dr. Hardik J. Pandya<br>
+        Designed a real-time EEG screening device to detect brain anomalies using P300 signals — implementing Oddball Paradigm stimuli, MATLAB-based signal processing, and building the foundational PCB for EEG acquisition.
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Education ───────────────────────────────────────────────── -->
+<section id="education">
+  <div class="section-label">Education</div>
+  <h2 class="section-heading">Academic Background</h2>
+
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">Aug 2022 – Dec 2023 · Stony Brook, NY, USA</div>
+      <div class="tl-title">M.S. Electrical &amp; Computer Engineering — Stony Brook University</div>
+      <div class="tl-body">GPA: <strong style="color:var(--green)">3.8 / 4.0</strong> · Teaching Assistant &amp; Senior Research Aide.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Aug 2015 – May 2019 · Bangalore, India</div>
+      <div class="tl-title">B.Tech Electronics &amp; Communication Engineering — Dayananda Sagar University</div>
+      <div class="tl-body">GPA: <strong style="color:var(--green)">8.82 / 10</strong> · Multiple internships, academic projects, national hackathon finalist.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Awards & Publications ───────────────────────────────────── -->
+<section id="awards">
+  <div class="section-label">Recognition</div>
+  <h2 class="section-heading">Awards &amp; Publications</h2>
+
+  <div class="reliability-grid">
+    <div class="reliability-item">
+      <div class="ri-icon">🏆</div>
+      <div class="ri-title">Hack@CEWIT 2023 — Winner</div>
+      <div class="ri-desc">Received the <strong style="color:var(--green)">"Most Helpful Hack" Award</strong> at Hack@CEWIT 2023, Stony Brook University, USA.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">⭐</div>
+      <div class="ri-title">Infosys Insta Award — Best Performance (3× Quarters)</div>
+      <div class="ri-desc">Received Infosys Best Performance Award for <strong style="color:var(--green)">3 consecutive quarters</strong> — given to one top performer per team. Bangalore, India (2020–2021).</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">🇮🇳</div>
+      <div class="ri-title">Smart India Hackathon — National Finalist</div>
+      <div class="ri-desc">Finalist in the <strong style="color:var(--green)">top 1,300 teams out of 37,000+</strong> at Smart India Hackathon Software Edition 2019.</div>
+    </div>
+    <div class="reliability-item">
+      <div class="ri-icon">📄</div>
+      <div class="ri-title">IEEE Publication — IoT &amp; Alzheimer's Research</div>
+      <div class="ri-desc"><em>"The Memorable Assistant: An IoT-Based Smart Wearable Alzheimer's Assisting Device"</em> — S. N. Siri et al., IEEE CSITSS 2021, Bangalore, India.</div>
+    </div>
+  </div>
+</section>
+
+<hr class="divider" />
+
+<!-- ── Contact ─────────────────────────────────────────────────── -->
+<section id="contact" style="max-width:100%">
+  <div class="section-label" style="justify-content:center;display:flex">Get In Touch</div>
+  <h2 class="section-heading">Let's Connect</h2>
+  <p style="color:var(--muted);max-width:480px;margin:0 auto 8px;">
+    Open to backend, data, and infrastructure roles. Especially interested in energy, climate tech, or high-scale systems with real impact.
+  </p>
+  <div class="contact-links">
+    <a class="contact-link" href="mailto:sirinaganoor@gmail.com">
+      ✉️ sirinaganoor@gmail.com
+    </a>
+    <a class="contact-link" href="tel:9342218595">
+      📞 934-221-8595
+    </a>
+    <a class="contact-link" href="https://linkedin.com/in/siri-s-n" target="_blank" rel="noopener noreferrer">
+      💼 LinkedIn
+    </a>
+    <a class="contact-link" href="https://github.com/siri-CodeforGood" target="_blank" rel="noopener noreferrer">
+      🐙 GitHub
+    </a>
+    <a class="contact-link" href="performance-dashboard.html" target="_blank">
+      📊 Full Dashboard
+    </a>
+  </div>
+</section>
+
+<footer>
+  <p>© 2026 Siri Siddalingappa Naganoor · Built with HTML, CSS &amp; Chart.js · Deployed via GitHub Pages</p>
+</footer>
+
+<script>
+  /* ── Animate hero numbers ──────────────────────────────────── */
+  function animateCount(id, target, duration) {
+    const el = document.getElementById(id);
+    if (!el) return;
+    let start = 0, startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = Math.min((timestamp - startTime) / duration, 1);
+      const eased = 1 - Math.pow(1 - progress, 3);
+      el.textContent = Math.floor(eased * target);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+    requestAnimationFrame(step);
+  }
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        animateCount('stat-tasks', 428, 1800);
+        animateCount('stat-sp', 343, 1800);
+        observer.disconnect();
+      }
+    });
+  }, { threshold: 0.3 });
+  const heroStats = document.querySelector('.hero-stats');
+  if (heroStats) observer.observe(heroStats);
+
+  /* ── Theme toggle ─────────────────────────────────────────── */
+  (function() {
+    const html = document.documentElement;
+    const btn  = document.getElementById('themeToggle');
+    // sync button icon with current theme (set by anti-FOUC head script)
+    if (html.getAttribute('data-theme') === 'dark' && btn) btn.textContent = '☀️';
+    if (btn) btn.addEventListener('click', () => {
+      const dark = html.getAttribute('data-theme') === 'dark';
+      if (dark) {
+        html.removeAttribute('data-theme');
+        btn.textContent = '🌙';
+        localStorage.setItem('theme', 'light');
+      } else {
+        html.setAttribute('data-theme', 'dark');
+        btn.textContent = '☀️';
+        localStorage.setItem('theme', 'dark');
+      }
+      updateCharts();
+    });
+  })();
+
+  /* ── Chart defaults ────────────────────────────────────────── */
+  Chart.defaults.color = '#64748b';
+  Chart.defaults.borderColor = '#e2e8f0';
+  const COLORS = ['#5b8dee','#a78bfa','#34d399','#fbbf24','#f87171','#38bdf8'];
+
+  /* ── Doughnut: work distribution ──────────────────────────── */
+  const chartDonut = new Chart(document.getElementById('taskTypeChart'), {
+    type: 'doughnut',
+    data: {
+      labels: ['Tasks', 'Bugs', 'Epics', 'Spikes', 'Stories'],
+      datasets: [{ data: [70, 8, 3, 2, 2], backgroundColor: COLORS,
+        borderWidth: 2, borderColor: '#ffffff' }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { padding:16, boxWidth:12 } } }
+    }
+  });
+
+  /* ── Bar: story points ─────────────────────────────────────── */
+  const chartBar = new Chart(document.getElementById('storyPointsChart'), {
+    type: 'bar',
+    data: {
+      labels: ['Infra', 'Full-Stack', 'Database', 'Integration', 'Security'],
+      datasets: [{
+        label: 'Story Points',
+        data: [80, 95, 65, 60, 43],
+        backgroundColor: COLORS.map(c => c + 'cc'),
+        borderRadius: 6
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { display: false } },
+      scales: { y: { beginAtZero: true, grid: { color: '#e2e8f0' } },
+                x: { grid: { display: false } } }
+    }
+  });
+
+  /* ── PolarArea: complexity ─────────────────────────────────── */
+  const chartPolar = new Chart(document.getElementById('complexityChart'), {
+    type: 'polarArea',
+    data: {
+      labels: ['1–2 pts', '3–5 pts', '6–10 pts', '10+ pts'],
+      datasets: [{
+        data: [20, 35, 25, 5],
+        backgroundColor: COLORS.map(c => c + '99'),
+        borderWidth: 1
+      }]
+    },
+    options: {
+      responsive: true,
+      plugins: { legend: { position: 'bottom', labels: { padding:16, boxWidth:12 } } },
+      scales: { r: { ticks: { backdropColor: 'transparent', color: '#64748b' }, grid: { color: '#e2e8f0' } } }
+    }
+  });
+
+  /* ── Update chart colors when theme switches ───────────────── */
+  function updateCharts() {
+    const dark       = document.documentElement.getAttribute('data-theme') === 'dark';
+    const gridColor  = dark ? '#1f2d40' : '#e2e8f0';
+    const tickColor  = dark ? '#94a3b8' : '#64748b';
+    const dBorder    = dark ? '#1a2332' : '#ffffff';
+    Chart.defaults.color       = tickColor;
+    Chart.defaults.borderColor = gridColor;
+    chartBar.options.scales.y.grid.color                  = gridColor;
+    chartBar.update('none');
+    chartPolar.options.scales.r.grid.color                = gridColor;
+    chartPolar.options.scales.r.ticks.color               = tickColor;
+    chartPolar.update('none');
+    chartDonut.data.datasets[0].borderColor               = dBorder;
+    chartDonut.update('none');
+  }
+</script>
+</body>
+</html>

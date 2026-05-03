@@ -1,0 +1,1107 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Siri Siddalingappa Naganoor - Performance Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary-color: #0052CC;
+            --secondary-color: #00875A;
+            --accent-color: #FF5630;
+            --success-color: #36B37E;
+            --warning-color: #FFAB00;
+            --background-dark: #0A1929;
+            --card-background: #1E2A38;
+            --text-light: #E0E0E0;
+            --text-muted: #A0A0A0;
+            --border-color: #2D3748;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, var(--background-dark) 0%, #1a2634 100%);
+            color: var(--text-light);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1600px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 40px;
+            border-radius: 20px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 60px rgba(102, 126, 234, 0.3);
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 3em;
+            margin-bottom: 10px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .header .subtitle {
+            font-size: 1.5em;
+            opacity: 0.9;
+            font-weight: 300;
+        }
+
+        .header .period {
+            margin-top: 15px;
+            font-size: 1.1em;
+            opacity: 0.8;
+        }
+
+        /* Summary Cards */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: var(--card-background);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 8px 30px rgba(102, 126, 234, 0.4);
+        }
+
+        .stat-card .icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .stat-card .value {
+            font-size: 3em;
+            font-weight: bold;
+            color: var(--success-color);
+            margin: 10px 0;
+        }
+
+        .stat-card .label {
+            color: var(--text-muted);
+            font-size: 1.1em;
+        }
+
+        /* Section */
+        .section {
+            background: var(--card-background);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        .section-title {
+            font-size: 2em;
+            margin-bottom: 25px;
+            color: var(--primary-color);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .section-title::before {
+            content: '';
+            width: 5px;
+            height: 40px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+            border-radius: 3px;
+        }
+
+        /* Charts */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-bottom: 30px;
+        }
+
+        .chart-container {
+            background: var(--card-background);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--border-color);
+        }
+
+        .chart-title {
+            font-size: 1.3em;
+            margin-bottom: 20px;
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        /* Achievement Cards */
+        .achievements-grid {
+            display: grid;
+            gap: 20px;
+        }
+
+        .achievement-card {
+            background: var(--card-background);
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 3px 15px rgba(0, 0, 0, 0.2);
+            border-left: 4px solid var(--success-color);
+            transition: all 0.3s;
+        }
+
+        .achievement-card:hover {
+            transform: translateX(5px);
+            box-shadow: 0 6px 25px rgba(54, 179, 126, 0.3);
+        }
+
+        .achievement-card .title {
+            font-size: 1.2em;
+            color: var(--success-color);
+            margin-bottom: 10px;
+            font-weight: 600;
+        }
+
+        .achievement-card .description {
+            color: var(--text-muted);
+            line-height: 1.6;
+        }
+
+        .achievement-card .category {
+            display: inline-block;
+            padding: 5px 12px;
+            background: rgba(102, 126, 234, 0.2);
+            border-radius: 20px;
+            font-size: 0.85em;
+            margin-top: 10px;
+            color: #667eea;
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 50px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 20px;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: linear-gradient(180deg, #667eea, #764ba2);
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 30px;
+            padding-left: 30px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -40px;
+            top: 5px;
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            background: var(--success-color);
+            box-shadow: 0 0 0 4px var(--card-background);
+        }
+
+        .timeline-item .date {
+            color: var(--primary-color);
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .timeline-item .content {
+            background: rgba(102, 126, 234, 0.1);
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 3px solid #667eea;
+        }
+
+        /* Tags */
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .tag {
+            padding: 8px 16px;
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.3), rgba(118, 75, 162, 0.3));
+            border-radius: 20px;
+            font-size: 0.9em;
+            border: 1px solid rgba(102, 126, 234, 0.5);
+            transition: all 0.3s;
+        }
+
+        .tag:hover {
+            transform: scale(1.05);
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-label {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.95em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 25px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 15px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #667eea, #764ba2);
+            border-radius: 15px;
+            transition: width 1s ease;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Print Styles */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+
+            .section,
+            .stat-card,
+            .chart-container {
+                break-inside: avoid;
+                box-shadow: none;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>🚀 Siri Siddalingappa Naganoor</h1>
+            <div class="subtitle">Software Development Engineer - Performance Dashboard</div>
+            <div class="period">📅 Performance Period: January - November 2025</div>
+        </div>
+
+        <!-- Summary Statistics -->
+        <div class="summary-grid">
+            <div class="stat-card">
+                <div class="icon">✅</div>
+                <div class="value" id="totalTasks">428</div>
+                <div class="label">Tasks Completed</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">⭐</div>
+                <div class="value" id="storyPoints">343</div>
+                <div class="label">Story Points Delivered</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">📊</div>
+                <div class="value">100%</div>
+                <div class="label">Success Rate</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">🎯</div>
+                <div class="value">51</div>
+                <div class="label">Major Achievements</div>
+            </div>
+            <div class="stat-card">
+                <div class="icon">🏆</div>
+                <div class="value">15</div>
+                <div class="label">Critical Initiatives</div>
+            </div>
+        </div>
+
+        <!-- Charts Section -->
+        <div class="section">
+            <h2 class="section-title">📈 Performance Analytics</h2>
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <h3 class="chart-title">Work Distribution by Type</h3>
+                    <canvas id="taskTypeChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <h3 class="chart-title">Story Points by Category</h3>
+                    <canvas id="storyPointsChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <h3 class="chart-title">Complexity Distribution</h3>
+                    <canvas id="complexityChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Key Metrics -->
+        <div class="section">
+            <h2 class="section-title">📊 Key Performance Metrics</h2>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Infrastructure & DevOps Excellence</span>
+                    <span>95%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 95%;">95%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Full-Stack Development</span>
+                    <span>98%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 98%;">98%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Database & Data Engineering</span>
+                    <span>92%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 92%;">92%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Security & Compliance (SOC 2)</span>
+                    <span>90%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 90%;">90%</div>
+                </div>
+            </div>
+            <div class="progress-container">
+                <div class="progress-label">
+                    <span>Integration & API Development</span>
+                    <span>96%</span>
+                </div>
+                <div class="progress-bar">
+                    <div class="progress-fill" style="width: 96%;">96%</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Top 15 Critical Achievements -->
+        <div class="section">
+            <h2 class="section-title">🏆 Top 51 Critical Achievements</h2>
+            <div class="achievements-grid">
+                <div class="achievement-card">
+                    <div class="title">1. Azure Infrastructure & Cost Optimization</div>
+                    <div class="description">
+                        Comprehensive Azure clean-up and cost-cutting initiatives, including CI/CD pipeline setup for
+                        PostgreSQL using Alembic, environment separation, and dev database configuration. Achieved
+                        significant cost reduction while improving infrastructure efficiency.
+                    </div>
+                    <div class="category">🔧 Infrastructure</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">2. Complete Database Migration: MySQL to PostgreSQL</div>
+                    <div class="description">
+                        Successfully migrated entire database from MySQL to PostgreSQL, including millions of rows of
+                        interval data with **zero data loss**. Established new schemas, performed comprehensive cleanup,
+                        and ensured data integrity throughout the process.
+                    </div>
+                    <div class="category">💾 Database Engineering</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">3. ConEd GBC Integration - Platform Quality Assurance</div>
+                    <div class="description">
+                        Led integration with ConEd GBC, identifying and reporting multiple critical issues in their
+                        platform including factor differences between realtime & historical data, missing intervals, and
+                        net block issues. Proactive communication appreciated by ConEd team.
+                    </div>
+                    <div class="category">🔌 Integration</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">4. Consumption Logic Apps to Standard Migration</div>
+                    <div class="description">
+                        Successfully transitioned from Consumption Logic Apps to Standard Logic Apps, improving
+                        performance, reliability, and cost efficiency. Complete migration with comprehensive testing and
+                        validation.
+                    </div>
+                    <div class="category">☁️ Cloud Migration</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">5. PostgreSQL Query Optimization & Async Implementation</div>
+                    <div class="description">
+                        Implemented PostgreSQL query helper functions as async with database pooling, preventing
+                        Function App timeouts caused by DB connection errors. Resolved critical production issues
+                        (PROD-4337, PROD-4352).
+                    </div>
+                    <div class="category">⚡ Performance</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">6. Comprehensive DR Event Management System</div>
+                    <div class="description">
+                        Built end-to-end demand response event management system including dispatch changes, control
+                        improvements, event extensions, cancellation processes, and notifications throughout Summer 2025
+                        DR season.
+                    </div>
+                    <div class="category">🎯 Business Logic</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">7. Email Deliverability Investigation & Resolution</div>
+                    <div class="description">
+                        Investigated and resolved critical email delivery issues for Yahoo/AOL and Microsoft domains
+                        (outlook, msn, live, hotmail). Users did not receive emails on July 17th - debugged SendGrid
+                        configuration and resolved deliverability issues.
+                    </div>
+                    <div class="category">📧 Communication</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">8. CSIAD Chatbot Development (PROD-4625)</div>
+                    <div class="description">
+                        Built intelligent chatbot for CSIAD event on 04/15/2025, demonstrating rapid development
+                        capabilities and AI integration skills.
+                    </div>
+                    <div class="category">🤖 AI/ML</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">9. New Meltek App - Complete Data Migration</div>
+                    <div class="description">
+                        Led comprehensive data migration for new Meltek app including user tables, utility info, user
+                        performances, referrals, and related data. Ensured data integrity and zero downtime migration.
+                    </div>
+                    <div class="category">🚀 Application Launch</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">10. ConEd DRMS Complete Platform Development</div>
+                    <div class="description">
+                        Built comprehensive ConEd DRMS system including: Admin Event Management Dashboard, Enrollment
+                        Management, User Device Lookup, New User Signup Flow (Electric & Gas), User Dashboard, and
+                        Device Connection Facilities. Complete platform from concept to production.
+                    </div>
+                    <div class="category">💼 Enterprise Platform</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">11. Duplicate Status User Workflow</div>
+                    <div class="description">
+                        Created workflow to send emails and SMS to users with Duplicate status and no affirmation
+                        records, signed up between 2022-2024.
+                    </div>
+                    <div class="category">📧 User Engagement</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">12. Bulk Lookup Status & User Account Updates</div>
+                    <div class="description">
+                        Implemented bulk lookup status and notified users to update account numbers. Users actually
+                        updated/reached out on Helpscout. Display account status in Meltek App, BYOT Email reforms.
+                    </div>
+                    <div class="category">👥 User Experience</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">13. Postgres Async Query & Database Pooling (PROD-4337, PROD-4352)</div>
+                    <div class="description">
+                        Implemented Postgres Query Run helper functions as async and implemented database pooling.
+                        Prevented FunctionApp timeouts occurring due to DB connection errors.
+                    </div>
+                    <div class="category">⚡ Performance</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">14. Multi-Program Enrollment (CSRP/DLRP)</div>
+                    <div class="description">
+                        Enrolled missing programs (CSRP or DLRP) for ConEd enrollments for accounts missing either of
+                        them.
+                    </div>
+                    <div class="category">📝 Enrollment</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">15. BYOT Customer DR Program Enrollment from Helpscout</div>
+                    <div class="description">
+                        Followed up and enrolled BYOT customers into DR Program from Helpscout interactions.
+                    </div>
+                    <div class="category">🎯 Customer Success</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">16. 2025 Affirmation Data to ConEd</div>
+                    <div class="description">Processed and submitted 2025 Affirmation Data to ConEd utility partner.
+                    </div>
+                    <div class="category">📝 Data Submission</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">17. False Duplicate Enrollments Resolution</div>
+                    <div class="description">Identified false duplicate enrollments, cancelled and re-enrolled them
+                        ensuring accurate enrollment records.
+                    </div>
+                    <div class="category">🔍 Data Quality</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">18. SMS Error Logs Exploration (PROD-3038)</div>
+                    <div class="description">Explored SMS error logs, identified patterns and resolved communication
+                        delivery issues.
+                    </div>
+                    <div class="category">📱 SMS</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">19. GBC Migration & Critical Issue Identification</div>
+                    <div class="description">Managed GBC migration to new version. Identified critical issues in
+                        incoming data (factor diff between realtime & historical, missing intervals, net block) and
+                        notified GBC Team at ConEd on several occasions.
+                    </div>
+                    <div class="category">🔄 Platform Migration</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">20. CSIAD Chatbot Development (PROD-4625)</div>
+                    <div class="description">Attended CSIAD on 04/15/2025 and built Chatbot for customer interactions.
+                    </div>
+                    <div class="category">🤖 AI Development</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">21. PSEG and O&R Payment Calculation</div>
+                    <div class="description">Calculated and processed PSEG and O&R payments, ensuring accurate financial
+                        settlements.
+                    </div>
+                    <div class="category">💰 Payments</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">22. Google Signup & Login in Bubble</div>
+                    <div class="description">Configured signup and login with Google authentication in Bubble platform.
+                    </div>
+                    <div class="category">🔑 Authentication</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">23. TOD Schemas & Preliminary Flows</div>
+                    <div class="description">Setup Time-of-Day schemas and preliminary flows in FunctionApp
+                        infrastructure.
+                    </div>
+                    <div class="category">⏰ Data Architecture</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">24. Trigger Flows Setup</div>
+                    <div class="description">Setup trigger flows for Retail Customer Info, Usage and Meter data
+                        synchronization.
+                    </div>
+                    <div class="category">🔄 Data Flows</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">25. Service Class Info Recurring Flow</div>
+                    <div class="description">Setup recurring flow to retrieve and save service class information
+                        automatically.
+                    </div>
+                    <div class="category">🔁 Automation</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">26. Historical & Realtime Data Flow Completion</div>
+                    <div class="description">Brought Recurring Historical and Realtime Data flow to completion. Resolved
+                        critical issues. Filter duplicates within interval blocks API json response before comparison
+                        with interval blocks table, before insertion - GBC.
+                    </div>
+                    <div class="category">📊 Data Pipeline</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">27. Meltek Webinar - Idea to Delivery</div>
+                    <div class="description">Conceptualized idea, created complete content, and delivered professional
+                        presentation for Meltek Webinar.
+                    </div>
+                    <div class="category">🎤 Presentation</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">28. Helpscout Documentation Update</div>
+                    <div class="description">Updated outdated Helpscout documents prior to webinar ensuring accurate
+                        customer-facing information.
+                    </div>
+                    <div class="category">📚 Documentation</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">29. Summer 2025 Dispatch Changes & DR Notifications</div>
+                    <div class="description">Managed dispatch changes and control throughout Summer 2025 with
+                        improvements to DR notifications.
+                    </div>
+                    <div class="category">⚡ Demand Response</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">30. DR Event Extension Workflow</div>
+                    <div class="description">Created workflow for DR Event Extension functionality.
+                    </div>
+                    <div class="category">🔄 Event Management</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">31. ConEd Event Cancellation Process</div>
+                    <div class="description">Implemented ConEd Dispatch Event Cancellation Process.
+                    </div>
+                    <div class="category">🚫 Event Control</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">32. Yahoo/AOL Email Delivery Investigation</div>
+                    <div class="description">Investigated Yahoo/AOL domain email delivery issues via Sendgrid,
+                        identified root causes and implemented fixes.
+                    </div>
+                    <div class="category">✉️ Email Delivery</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">33. Microsoft Domain Email Issue - July 17th</div>
+                    <div class="description">Resolved critical issue where Microsoft Domain (outlook, msn, live,
+                        hotmail) users did not receive emails on July 17th.
+                    </div>
+                    <div class="category">📧 Email Systems</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">34. Postgres.py Separate Pooling Refactor</div>
+                    <div class="description">Refactored Postgres.py to have separate pooling for generic use and webhook
+                        use, improving performance and scalability.
+                    </div>
+                    <div class="category">🔧 Code Architecture</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">35. get_postgres_connection() Enhancement</div>
+                    <div class="description">Modified get_postgres_connection() in postgres.py to return pool with
+                        connection. Updated interval recurring flows to use it accordingly.
+                    </div>
+                    <div class="category">⚡ Performance</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">36. Twilio Link Shortening Debug</div>
+                    <div class="description">Debugged Twilio link shortening and other error codes, improving SMS
+                        reliability.
+                    </div>
+                    <div class="category">📱 SMS</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">37. Helpscout Tickets & Live Chat Management</div>
+                    <div class="description">Managed high influx of Helpscout Tickets and Live Chat requests providing
+                        excellent customer support.
+                    </div>
+                    <div class="category">💬 Customer Support</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">38. Event Stats Dashboard for Admin</div>
+                    <div class="description">Created event stats dashboard for GBC and non-GBC users in admin dashboard
+                        providing comprehensive analytics.
+                    </div>
+                    <div class="category">📊 Analytics Dashboard</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">39. ConEd Post Event Flow Fixes</div>
+                    <div class="description">Fixed ConEd Post Event Flow to adjust to new timelines of event calls,
+                        handled missing intervals and data issues.
+                    </div>
+                    <div class="category">🔧 Operations</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">40. Faster Django Database Models</div>
+                    <div class="description">Explored faster ways to create Django Database Models, improving
+                        development velocity and streamlining model creation processes.
+                    </div>
+                    <div class="category">⚡ Development Speed</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">41. Shut off Meltek-GBC Logic App</div>
+                    <div class="description">Decommissioned legacy logic app Meltek-GBC, successfully migrating all
+                        functionality to modern FunctionApp architecture.
+                    </div>
+                    <div class="category">🔄 Modernization</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">42. Convert Logic App to FunctionApp</div>
+                    <div class="description">Successfully converted Logic App to FunctionApp -
+                        Non-GBC-Performance-Calculation-2, modernizing infrastructure for better performance and
+                        maintainability.
+                    </div>
+                    <div class="category">☁️ Cloud Migration</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">43. Microsoft Auth Debug & Fix</div>
+                    <div class="description">Debugged and fixed Microsoft Authentication issues, ensuring secure and
+                        reliable user access to platform services.
+                    </div>
+                    <div class="category">🔐 Authentication</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">44. ConEd DRMS Admin Dashboards</div>
+                    <div class="description">Built comprehensive ConEd DRMS Admin tools including Event Management
+                        Dashboard and Enrollment Management Dashboard for complete operational oversight.
+                    </div>
+                    <div class="category">🖥️ Admin Tools</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">45. ConEd DRMS User Features</div>
+                    <div class="description">Developed comprehensive ConEd DRMS User features: Device Lookup Page, New
+                        User Signup Flow (complete end-to-end for both Electric and Gas), User Dashboard, and Device
+                        Connection Facilities.
+                    </div>
+                    <div class="category">👥 User Platform</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">46. Dispatch Webhook & DR Demo Dashboard</div>
+                    <div class="description">Created dispatch webhook and developed function-Simulation & DR Event
+                        Demonstration Dashboard for comprehensive event testing and demonstrations.
+                    </div>
+                    <div class="category">⚡ Event Simulation</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">47. New Meltek App Data Migration</div>
+                    <div class="description">Completed comprehensive data migration to New Meltek App including user and
+                        related tables, utility information, User Performances, referrals, and all associated data
+                        ensuring zero data loss.
+                    </div>
+                    <div class="category">🔄 Platform Migration</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">48. Gift Card Promotions in New App</div>
+                    <div class="description">Implemented Gift Card Promotions feature in New Meltek App, enhancing user
+                        rewards and engagement strategies.
+                    </div>
+                    <div class="category">🎁 Rewards</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">49. 2025 Payments and Settlements</div>
+                    <div class="description">Processed and managed 2025 Payments and Settlements ensuring accurate
+                        financial operations and timely customer payments.
+                    </div>
+                    <div class="category">💰 Financial Operations</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">50. Logic App Phaseout</div>
+                    <div class="description">Successfully phased out all legacy Logic Apps, completing comprehensive
+                        modernization of entire infrastructure to FunctionApp architecture.
+                    </div>
+                    <div class="category">☁️ Infrastructure Modernization</div>
+                </div>
+
+                <div class="achievement-card">
+                    <div class="title">51. Natural Language to SQL POC</div>
+                    <div class="description">Built a working POC for Natural Language to SQL query generation and
+                        operation - Prototype demonstrating AI/ML innovation and future capabilities.
+                    </div>
+                    <div class="category">🧠 AI Innovation</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Recent Work Timeline -->
+        <div class="section">
+            <h2 class="section-title">⏰ Recent Work Timeline (Last 3 Months)</h2>
+            <div class="timeline">
+                <div class="timeline-item">
+                    <div class="date">November 2025</div>
+                    <div class="content">
+                        <strong>Payment Notifications & Balance Management</strong><br>
+                        Sent payment notifications for June/July 2025 events (11/14-11/21). Created FAQs for password
+                        reset and reward redemption. Fixed Helpscout balance issues and utility account table
+                        constraints.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="date">November 2025</div>
+                    <div class="content">
+                        <strong>App Launch & Stripe Integration</strong><br>
+                        Completed app launch UI updates including new funds deposit feature and pending events banner.
+                        Implemented Stripe deposit functionality with embedded checkout, transaction fees, and webhook
+                        handling.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="date">November 2025</div>
+                    <div class="content">
+                        <strong>Database & Migration Work</strong><br>
+                        Fixed Postgres DB intermittent disconnection issue. Processed webhook events. Created
+                        BubbleUsers reference table and utility account number migrations.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="date">October 2025</div>
+                    <div class="content">
+                        <strong>Infrastructure & DevOps</strong><br>
+                        Attended Drata evidence uploads. Setup Celery scaling based on CPU usage. Fixed Celery Beat
+                        health checks. Debugged production backend container "Failed/Degraded" status.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="date">October 2025</div>
+                    <div class="content">
+                        <strong>DRMS Platform Development</strong><br>
+                        Created DLC dashboard devices section. Integrated Enode device linking. Built enrollment
+                        management system. Enhanced event management UI and communication templates.
+                    </div>
+                </div>
+
+                <div class="timeline-item">
+                    <div class="date">September 2025</div>
+                    <div class="content">
+                        <strong>Settlement & Demo Creation</strong><br>
+                        Processed June settlement discrepancy file. Created DR Event Demonstration Dashboard. Built
+                        device simulation service for demos. Setup dispatch webhook and functions.
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technologies Used -->
+        <div class="section">
+            <h2 class="section-title">💻 Technologies & Tools</h2>
+            <div class="tags">
+                <div class="tag">Python</div>
+                <div class="tag">Django</div>
+                <div class="tag">PostgreSQL</div>
+                <div class="tag">Azure</div>
+                <div class="tag">Next.js</div>
+                <div class="tag">React</div>
+                <div class="tag">TypeScript</div>
+                <div class="tag">Docker</div>
+                <div class="tag">Celery</div>
+                <div class="tag">Redis</div>
+                <div class="tag">Azure Functions</div>
+                <div class="tag">Logic Apps</div>
+                <div class="tag">Stripe</div>
+                <div class="tag">Twilio</div>
+                <div class="tag">SendGrid</div>
+                <div class="tag">Helpscout</div>
+                <div class="tag">Bubble</div>
+                <div class="tag">Enode</div>
+                <div class="tag">GBC (Green Button Connect)</div>
+                <div class="tag">Alembic</div>
+                <div class="tag">REST API</div>
+                <div class="tag">Webhooks</div>
+                <div class="tag">OAuth</div>
+                <div class="tag">JWT</div>
+                <div class="tag">SQL</div>
+                <div class="tag">NoSQL</div>
+                <div class="tag">CI/CD</div>
+                <div class="tag">GitHub Actions</div>
+                <div class="tag">Sentry</div>
+                <div class="tag">Application Insights</div>
+                <div class="tag">PostHog</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Chart.js configuration
+        Chart.defaults.color = '#E0E0E0';
+        Chart.defaults.borderColor = '#2D3748';
+
+        // Task Type Distribution Chart
+        const taskTypeCtx = document.getElementById('taskTypeChart').getContext('2d');
+        new Chart(taskTypeCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Tasks', 'Bugs', 'Epics', 'Spikes', 'Stories'],
+                datasets: [{
+                    data: [70, 8, 3, 2, 2],
+                    backgroundColor: [
+                        '#667eea',
+                        '#764ba2',
+                        '#f093fb',
+                        '#4facfe',
+                        '#00f2fe'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: {
+                        position: 'bottom'
+                    }
+                }
+            }
+        });
+
+
+
+        // Story Points by Category
+        const storyPointsCtx = document.getElementById('storyPointsChart').getContext('2d');
+        new Chart(storyPointsCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Infrastructure', 'Full-Stack', 'Database', 'Integration', 'Security'],
+                datasets: [{
+                    label: 'Story Points',
+                    data: [80, 95, 65, 60, 43],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.8)',
+                        'rgba(118, 75, 162, 0.8)',
+                        'rgba(240, 147, 251, 0.8)',
+                        'rgba(79, 172, 254, 0.8)',
+                        'rgba(0, 242, 254, 0.8)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+
+        // Complexity Distribution
+        const complexityCtx = document.getElementById('complexityChart').getContext('2d');
+        new Chart(complexityCtx, {
+            type: 'polarArea',
+            data: {
+                labels: ['1-2 Points', '3-5 Points', '6-10 Points', '10+ Points'],
+                datasets: [{
+                    data: [20, 35, 25, 5],
+                    backgroundColor: [
+                        'rgba(102, 126, 234, 0.6)',
+                        'rgba(118, 75, 162, 0.6)',
+                        'rgba(240, 147, 251, 0.6)',
+                        'rgba(79, 172, 254, 0.6)'
+                    ]
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    r: {
+                        ticks: {
+                            backdropColor: 'transparent'
+                        }
+                    }
+                }
+            }
+        });
+
+        // Animate numbers on load
+        function animateValue(id, start, end, duration) {
+            const obj = document.getElementById(id);
+            let startTimestamp = null;
+            const step = (timestamp) => {
+                if (!startTimestamp) startTimestamp = timestamp;
+                const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+                obj.innerHTML = Math.floor(progress * (end - start) + start);
+                if (progress < 1) {
+                    window.requestAnimationFrame(step);
+                }
+            };
+            window.requestAnimationFrame(step);
+        }
+
+        // Animate on page load
+        window.addEventListener('load', () => {
+            animateValue('totalTasks', 0, 428, 2000);
+            animateValue('storyPoints', 0, 343, 2000);
+        });
+    </script>
+</body>
+
+</html>
