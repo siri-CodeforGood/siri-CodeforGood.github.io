@@ -169,6 +169,7 @@
       display:grid; grid-template-columns: 1fr 1fr;
       gap: 32px;
     }
+    #why .context-banner { grid-template-columns: 1fr 1fr 1fr; }
     .context-item h3 { font-size:1.1rem; margin-bottom:10px; }
     .context-item p { color:var(--muted); font-size:.9rem; }
 
@@ -214,6 +215,7 @@
     .project-header {
       display:flex; align-items:flex-start;
       justify-content:space-between; gap:16px;
+      flex-wrap:wrap;
       margin-bottom:16px;
     }
     .project-title { font-size:1.35rem; font-weight:700; margin-bottom:4px; }
@@ -419,9 +421,21 @@
       nav { padding:0 20px; }
       .nav-links { display:none; }
       section { padding:72px 20px; }
-      .context-banner { grid-template-columns:1fr; }
-      .hero-stats { gap:28px; }
+      /* override both 2-col and 3-col banners */
+      .context-banner,
+      #why .context-banner { grid-template-columns:1fr; }
+      .hero-stats { gap:24px; }
+      .hero-stat-num { font-size:2rem; }
+      h1.hero-name { font-size:clamp(2rem,8vw,3.2rem); }
+      .built-grid { grid-template-columns: 1fr 1fr; }
+      .project-metrics { gap:16px; }
+      .metric-val { font-size:1.4rem; }
+      .next-grid { grid-template-columns:1fr; }
+      .how-grid { grid-template-columns:1fr; }
       #contact { padding:60px 20px; }
+    }
+    @media (max-width:400px) {
+      .built-grid { grid-template-columns:1fr; }
     }
 
     /* ── Theme toggle button ─────────────────────────────────── */
@@ -546,7 +560,7 @@
 <section id="why">
   <div class="section-label">Context</div>
   <h2 class="section-heading">Why This Work Matters</h2>
-  <div class="context-banner" style="grid-template-columns:1fr 1fr 1fr;">
+  <div class="context-banner">
     <div class="context-item">
       <h3>⚡ The Energy Problem</h3>
       <p>Utilities need customers to reduce electricity during grid stress events. But the systems connecting utilities, devices, and payments are slow, manual, and fragmented — creating reliability risk and lost revenue.</p>
