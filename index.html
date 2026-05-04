@@ -644,31 +644,30 @@
 <section id="reliability">
   <div class="section-label">Case Study 2</div>
   <h2 class="section-heading">From Production Firefighting to Scalable Reliability</h2>
-  <p class="section-sub">How I diagnosed and systematically resolved a cluster of production issues causing outages, autoscaling, and data misrouting.</p>
+  <p class="section-sub">How I diagnosed and resolved a cluster of concurrent production issues — spanning database exhaustion, email delivery, cloud routing, and container scaling — without playbooks or prior context.</p>
   <div class="project-card">
     <span class="project-role">My Role: sole investigator and resolver — backend, cloud, and communications stack</span>
     <div class="project-problem">
-      <strong>The Problems (all in production simultaneously):</strong>
+      <strong>What was breaking (all at once, in production):</strong>
       <ul class="styled" style="margin-top:8px;">
-        <li>FunctionApp timeouts from DB connection exhaustion (PROD-4337, PROD-4352)</li>
-        <li>Microsoft domain email delivery failure on July 17th — users not receiving emails</li>
-        <li>Twilio events routed to dev backend instead of prod — silent failure</li>
-        <li>Phone-number lookup events hitting dev instead of prod</li>
-        <li>Container autoscaling triggered by missing DB connection recycling in enrollment flows</li>
-        <li>ConEd access-token refresh running in both dev and prod — token invalidation risk</li>
+        <li>Azure Function Apps timing out intermittently — traced to database connection pool exhaustion under load</li>
+        <li>Transactional emails silently failing for users on Microsoft-hosted domains — no bounces, no alerts</li>
+        <li>SMS and phone-lookup webhooks from Twilio routing to the wrong environment — events were being silently swallowed</li>
+        <li>Container autoscaling triggering unexpectedly during enrollment flows — caused by connections not being recycled</li>
+        <li>A background token-refresh job running in both dev and prod simultaneously — creating token invalidation risk for utility API access</li>
       </ul>
     </div>
     <div class="project-solution">
-      <strong>Fixes applied systematically:</strong>
+      <strong>How I resolved each one:</strong>
       <ul class="styled" style="margin-top:8px;">
-        <li>PostgreSQL async query helpers + separate connection pooling (generic vs webhook) — eliminated timeouts</li>
-        <li>DB connection recycling added to bulk + enrollment flows — stopped autoscaling</li>
-        <li>Debugged SendGrid for Yahoo/AOL + Microsoft domains — restored email delivery</li>
-        <li>Fixed Twilio and phone-lookup routing — dev and prod fully isolated</li>
-        <li>Fixed ConEd token refresh to run only in prod — removed invalidation risk</li>
+        <li>Built async PostgreSQL query helpers with separate connection pools for generic vs. webhook traffic — eliminated timeout cascades</li>
+        <li>Added connection recycling to bulk-processing and enrollment flows — stopped the spurious autoscaling</li>
+        <li>Debugged SendGrid domain authentication for Microsoft and Yahoo/AOL — restored full email deliverability</li>
+        <li>Corrected Twilio webhook endpoints and phone-lookup routing — dev and prod fully isolated with no shared state</li>
+        <li>Scoped the ConEd token-refresh job to production only — removed the cross-environment invalidation risk</li>
       </ul>
     </div>
-    <div class="project-outcome"><strong>Outcome:</strong> All incidents resolved. Zero recurring DB exhaustion. Email deliverability restored across all domains. Container autoscaling normalized. Platform running at 99.9%+ uptime.</div>
+    <div class="project-outcome"><strong>Outcome:</strong> All five issue classes resolved within the same sprint. Zero recurring DB exhaustion. Email deliverability restored across all domains. Container autoscaling stabilized. Platform has maintained 99.9%+ uptime since.</div>
     <div class="project-tech">
       <span class="tech-chip">PostgreSQL pooling</span><span class="tech-chip">Python async</span>
       <span class="tech-chip">SendGrid</span><span class="tech-chip">Twilio</span>
