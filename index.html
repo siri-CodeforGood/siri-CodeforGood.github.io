@@ -709,16 +709,20 @@
       <div class="project-header">
         <div>
           <div class="project-title">Azure Infrastructure Modernization</div>
-          <div class="project-subtitle">Complete phaseout of Logic Apps — migrated all to Function Apps</div>
+          <div class="project-subtitle">Full migration: Logic Apps → Function Apps → containerized microservices on Azure Container Apps</div>
         </div>
         <span class="project-badge badge-infra">Infrastructure</span>
       </div>
       <span class="project-role">My Role: sole infrastructure engineer — design, migration, decommission, monitoring</span>
-      <div class="project-solution"><strong>Built:</strong> Consumption → Standard Logic Apps migration, then full conversion to Function Apps. Decommissioned Meltek-GBC Logic App. DB recycling across all flows. Celery CPU-based autoscaling.</div>
-      <div class="project-outcome"><strong>Outcome:</strong> 100% Logic Apps phased out. Azure costs reduced. Reliability and observability improved across all cloud workflows.</div>
+      <div class="project-solution"><strong>Built:</strong> Three-phase migration. Phase 1: Consumption → Standard Logic Apps. Phase 2: Logic Apps → Azure Function Apps (Python). Phase 3: full containerization into four dedicated Azure Container Apps — Next.js frontend, Django REST backend, Celery worker, and Redis. Added DB connection recycling across all flows, CPU-based Celery autoscaling, and KEDA-based scaling on Redis queue depth.</div>
+      <div class="project-outcome"><strong>Outcome:</strong> 100% Logic Apps retired. Platform now runs as a proper microservices architecture on Azure Container Apps. Deployments are parallel (60–70% faster), environment isolation is clean (dev/prod), and each service scales independently. Azure costs reduced. Full CI/CD via GitHub Actions with dual-layer caching (GHA + ACR).</div>
       <div class="project-tech">
-        <span class="tech-chip">Azure Functions</span><span class="tech-chip">Azure Container Apps</span>
-        <span class="tech-chip">Celery</span><span class="tech-chip">Redis</span><span class="tech-chip">Docker</span>
+        <span class="tech-chip">Azure Container Apps</span><span class="tech-chip">Azure Functions</span>
+        <span class="tech-chip">Docker</span><span class="tech-chip">Next.js (container)</span>
+        <span class="tech-chip">Django (container)</span><span class="tech-chip">Celery (container)</span>
+        <span class="tech-chip">Redis (container)</span><span class="tech-chip">KEDA</span>
+        <span class="tech-chip">GitHub Actions</span><span class="tech-chip">Azure Container Registry</span>
+        <span class="tech-chip">Bicep (IaC)</span>
       </div>
     </div>
 
@@ -844,44 +848,51 @@
     <div class="skill-group">
       <div class="skill-group-title">Languages</div>
       <div class="skill-tags">
-        <span class="skill-tag">Python</span><span class="skill-tag">JavaScript</span>
-        <span class="skill-tag">TypeScript</span><span class="skill-tag">Java</span><span class="skill-tag">SQL</span>
+        <span class="skill-tag">Python 3.13</span><span class="skill-tag">TypeScript 5.9</span>
+        <span class="skill-tag">JavaScript</span><span class="skill-tag">Java</span><span class="skill-tag">SQL</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Backend</div>
       <div class="skill-tags">
-        <span class="skill-tag">Django</span><span class="skill-tag">Celery</span>
-        <span class="skill-tag">Node.js</span><span class="skill-tag">REST APIs</span><span class="skill-tag">Webhooks</span><span class="skill-tag">OAuth / JWT</span>
+        <span class="skill-tag">Django 6</span><span class="skill-tag">Celery 5.6</span>
+        <span class="skill-tag">Node.js 25</span><span class="skill-tag">REST APIs</span>
+        <span class="skill-tag">Webhooks</span><span class="skill-tag">OAuth 2.0 / JWT</span>
+      </div>
+    </div>
+    <div class="skill-group">
+      <div class="skill-group-title">Frontend &amp; Mobile</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Next.js 16 (App Router)</span><span class="skill-tag">React 19</span>
+        <span class="skill-tag">React Native 0.85</span><span class="skill-tag">Expo 55</span>
+        <span class="skill-tag">Tailwind CSS 4</span><span class="skill-tag">Turbopack</span>
+        <span class="skill-tag">next-intl (i18n, 5 locales)</span><span class="skill-tag">Bubble</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Cloud &amp; Infrastructure</div>
       <div class="skill-tags">
-        <span class="skill-tag">Azure Functions</span><span class="skill-tag">Azure Container Apps</span>
-        <span class="skill-tag">Docker</span><span class="skill-tag">GitHub Actions</span><span class="skill-tag">CI/CD</span>
+        <span class="skill-tag">Azure Container Apps</span><span class="skill-tag">Azure Functions</span>
+        <span class="skill-tag">Azure Key Vault</span><span class="skill-tag">Azure Container Registry</span>
+        <span class="skill-tag">Bicep (IaC)</span><span class="skill-tag">Docker</span>
+        <span class="skill-tag">GitHub Actions</span><span class="skill-tag">CI/CD</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Data</div>
       <div class="skill-tags">
-        <span class="skill-tag">PostgreSQL</span><span class="skill-tag">MySQL</span>
-        <span class="skill-tag">Redis</span><span class="skill-tag">MongoDB</span><span class="skill-tag">Alembic</span>
-      </div>
-    </div>
-    <div class="skill-group">
-      <div class="skill-group-title">Frontend</div>
-      <div class="skill-tags">
-        <span class="skill-tag">Next.js</span><span class="skill-tag">React</span>
-        <span class="skill-tag">TypeScript</span><span class="skill-tag">Tailwind</span><span class="skill-tag">Bubble</span>
+        <span class="skill-tag">PostgreSQL 15</span><span class="skill-tag">psycopg 3</span>
+        <span class="skill-tag">MySQL</span><span class="skill-tag">Redis 7</span>
+        <span class="skill-tag">MongoDB</span><span class="skill-tag">Alembic</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Integrations</div>
       <div class="skill-tags">
         <span class="skill-tag">GBC (Green Button)</span><span class="skill-tag">Enode</span>
-        <span class="skill-tag">Kasa API</span><span class="skill-tag">Stripe</span>
-        <span class="skill-tag">SendGrid</span><span class="skill-tag">Twilio</span>
+        <span class="skill-tag">Kasa API</span><span class="skill-tag">TikTok Discovery API</span>
+        <span class="skill-tag">Stripe</span><span class="skill-tag">SendGrid</span>
+        <span class="skill-tag">Twilio</span><span class="skill-tag">HelpScout</span>
       </div>
     </div>
     <div class="skill-group">
@@ -892,10 +903,12 @@
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">Observability</div>
+      <div class="skill-group-title">Testing &amp; Observability</div>
       <div class="skill-tags">
-        <span class="skill-tag">Sentry</span><span class="skill-tag">Application Insights</span>
-        <span class="skill-tag">PostHog</span><span class="skill-tag">Drata (SOC 2)</span>
+        <span class="skill-tag">Jest 30</span><span class="skill-tag">Playwright 1.57</span>
+        <span class="skill-tag">Stryker (mutation)</span><span class="skill-tag">Sentry</span>
+        <span class="skill-tag">Application Insights</span><span class="skill-tag">PostHog</span>
+        <span class="skill-tag">Drata (SOC 2)</span>
       </div>
     </div>
   </div>
