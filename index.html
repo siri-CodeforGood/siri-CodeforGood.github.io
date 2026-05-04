@@ -515,7 +515,7 @@
     <li><a href="#contact">Contact</a></li>
   </ul>
   <div style="display:flex;align-items:center;gap:8px;">
-    <a class="nav-cta" href="performance-dashboard.html" target="_blank">📊 Full Dashboard</a>
+    <a class="nav-cta" href="SiriSiddalingappaNaganoor_Resume_2026.pdf" download>📄 Resume</a>
     <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode" title="Toggle dark / light mode">🌙</button>
   </div>
 </nav>
@@ -537,22 +537,48 @@
     <a class="btn-primary" href="#quickpay">View Case Studies</a>
     <a class="btn-outline" href="#built">What I Built</a>
   </div>
-  <div class="hero-stats">
-    <div>
-      <div class="hero-stat-num">10M+</div>
-      <div class="hero-stat-label">Records/Month Processed</div>
+</section>
+
+
+<hr class="divider" />
+
+<!-- ── Experience + Education ─────────────────────────────────── -->
+<section id="experience">
+  <div class="section-label">Career</div>
+  <h2 class="section-heading">Work Experience &amp; Education</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-date">Jan 2024 – Present · Remote, New York, USA</div>
+      <div class="tl-title">Software Developer — Meltek Inc.</div>
+      <div class="tl-body">Backend systems, cloud workflows, data pipelines, and platform reliability for a demand response energy-tech startup. Full end-to-end ownership — from utility API integrations to production incident resolution.</div>
     </div>
-    <div>
-      <div class="hero-stat-num">6wk→24h</div>
-      <div class="hero-stat-label">Payout Time Reduction</div>
+    <div class="tl-item">
+      <div class="tl-date">May 2023 – Aug 2023 · Remote (Intern)</div>
+      <div class="tl-title">Software Developer Intern — Meltek Inc.</div>
+      <div class="tl-body">Built 10+ API-driven workflows in Bubble.io and Azure Logic Apps. Resolved critical production issues — reducing customer support load by 50%.</div>
     </div>
-    <div>
-      <div class="hero-stat-num">99.9%</div>
-      <div class="hero-stat-label">Platform Uptime</div>
+    <div class="tl-item">
+      <div class="tl-date">Jan 2021 – Aug 2022 · Bangalore, India</div>
+      <div class="tl-title">Senior Systems Engineer — Infosys Limited</div>
+      <div class="tl-body">Sole Full Stack Developer for Partner Management Portal — MERN stack. Supported 59% YoY revenue increase in Infosys product business.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Oct 2019 – Dec 2020 · Bangalore, India</div>
+      <div class="tl-title">Systems Engineer — Infosys Limited</div>
+      <div class="tl-body">Java backend for Allstate Insurance's Transformative Growth Portal. Built Vehicular Insurance Line of Business independently within one year.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Aug 2022 – Dec 2023 · Stony Brook, NY</div>
+      <div class="tl-title">M.S. Electrical &amp; Computer Engineering — Stony Brook University</div>
+      <div class="tl-body">GPA: <strong style="color:var(--green)">3.8 / 4.0</strong> · Teaching Assistant &amp; Senior Research Aide.</div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-date">Aug 2015 – May 2019 · Bangalore, India</div>
+      <div class="tl-title">B.Tech ECE — Dayananda Sagar University</div>
+      <div class="tl-body">GPA: <strong style="color:var(--green)">8.82 / 10</strong> · SIH National Finalist · IEEE Publication · Hack@CEWIT Winner.</div>
     </div>
   </div>
 </section>
-
 
 <hr class="divider" />
 
@@ -583,6 +609,64 @@
   <div class="section-label">Overview</div>
   <h2 class="section-heading">What I Built</h2>
   <p class="section-sub">Five domains of ownership across the Meltek platform.</p>
+
+  <div class="arch-diagram" style="margin-bottom:40px;">
+    <div class="arch-layer">
+      <div class="arch-layer-title">⚡ Utility Data Sources</div>
+      <div class="arch-boxes">
+        <span class="arch-box blue">ConEd GBC (Green Button Connect)</span>
+        <span class="arch-box blue">ConEd DRMS API</span>
+        <span class="arch-box blue">PSEG / O&amp;R APIs</span>
+        <span class="arch-box blue">Enode (Device Control)</span>
+        <span class="arch-box blue">Kasa API (Smart Plugs)</span>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ webhooks · polling · OAuth token refresh</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">☁️ Cloud Processing Layer (Azure Container Apps)</div>
+      <div class="arch-boxes">
+        <span class="arch-box purple">Django REST Backend (Container App)</span>
+        <span class="arch-box purple">Celery Worker (Container App)</span>
+        <span class="arch-box purple">Redis (Container App)</span>
+        <span class="arch-box purple">Next.js Frontend (Container App)</span>
+        <span class="arch-box purple">KEDA Autoscaling (Redis queue depth)</span>
+        <span class="arch-box purple">CI/CD — GitHub Actions + ACR + Alembic</span>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ async DB pooling · interval data · enrollment flows</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">💾 Data Layer</div>
+      <div class="arch-boxes">
+        <span class="arch-box green">PostgreSQL (migrated from MySQL)</span>
+        <span class="arch-box green">Interval / Realtime Data Tables</span>
+        <span class="arch-box green">Enrollment &amp; User Records</span>
+        <span class="arch-box green">Settlement &amp; Payment Records</span>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ dispatches · notifications · payments</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">📲 Output Channels</div>
+      <div class="arch-boxes">
+        <span class="arch-box yellow">Meltek App (Next.js + React)</span>
+        <span class="arch-box yellow">ConEd DRMS Portal</span>
+        <span class="arch-box yellow">Admin Dashboards</span>
+        <span class="arch-box yellow">SendGrid Emails</span>
+        <span class="arch-box yellow">Twilio SMS</span>
+        <span class="arch-box yellow">Stripe Payments</span>
+      </div>
+    </div>
+    <div class="arch-arrow">↓ monitoring</div>
+    <div class="arch-layer">
+      <div class="arch-layer-title">🔍 Observability</div>
+      <div class="arch-boxes">
+        <span class="arch-box red">Sentry (errors)</span>
+        <span class="arch-box red">Application Insights</span>
+        <span class="arch-box red">PostHog (analytics)</span>
+        <span class="arch-box red">Drata (SOC 2)</span>
+      </div>
+    </div>
+  </div>
+
   <div class="built-grid">
     <div class="built-card">
       <div class="built-card-icon">⚡</div>
@@ -628,7 +712,20 @@
       <div class="metric"><div class="metric-val">99.9%</div><div class="metric-lbl">Uptime</div></div>
     </div>
     <div class="project-problem"><strong>Problem:</strong> Customer payouts for energy performance took up to 6 weeks — manual data downloads, manual validation, manual transfers. Every step human-operated and error-prone.</div>
-    <div class="project-solution"><strong>My Work:</strong> Integrated ConEd GBC utility APIs to auto-pull interval energy data. Built Celery async task pipelines for automated performance analysis. Automated payout calculation. Replaced manual dispatch with Enode webhook-triggered alerts. Full data pipeline from utility → analysis → payment.</div>
+    <div class="project-solution">
+      <strong>My Work:</strong>
+      <ul class="styled" style="margin-top:8px;">
+        <li>Integrated ConEd GBC utility APIs to auto-pull interval energy data — replacing manual CSV downloads</li>
+        <li>Built Celery async task pipelines for automated performance analysis and payout calculation</li>
+        <li>Full data pipeline from utility → analysis → payment — no human steps in the loop</li>
+      </ul>
+    </div>
+    <div class="project-solution">
+      <strong>Dispatch System:</strong>
+      <ul class="styled" style="margin-top:8px;">
+        <li>Developed the company's core dispatch system using Enode — replacing manual processes with webhook-triggered device alerts, resulting in an 80% increase in user responsiveness and directly driving higher revenue</li>
+      </ul>
+    </div>
     <div class="project-outcome"><strong>Outcome:</strong> Payout time cut from 6 weeks to &lt;24 hours. 10M+ records/month processed automatically. 80% increase in user responsiveness. This is now the core revenue engine of Meltek.</div>
     <div class="project-tech">
       <span class="tech-chip">Python</span><span class="tech-chip">Django</span><span class="tech-chip">Celery</span>
@@ -743,16 +840,27 @@
       <div class="project-header">
         <div>
           <div class="project-title">Natural Language → SQL POC</div>
-          <div class="project-subtitle">AI-powered query generation over the Meltek production schema</div>
+          <div class="project-subtitle">AI-powered query generation over the Meltek production schema — iteratively built and improved</div>
         </div>
         <span class="project-badge badge-ai">AI Innovation</span>
       </div>
-      <span class="project-role">My Role: sole builder — concept, schema prompting, integration, demo</span>
-      <div class="project-solution"><strong>Built:</strong> NL → schema-aware SQL → execution pipeline. LLM with domain-specific prompting for energy data models (enrollments, intervals, settlements).</div>
-      <div class="project-outcome"><strong>Outcome:</strong> Working prototype. Foundation for AI-assisted admin tooling. Demonstrated AI integration in a production domain-specific context.</div>
+      <span class="project-role">My Role: sole builder — concept, schema prompting, integration, iteration</span>
+      <div class="project-problem"><strong>Challenge:</strong> Non-technical operators needed to query complex, multi-schema production data (enrollments, intervals, settlements) without writing SQL — and without hallucinated or wrong-table results.</div>
+      <div class="project-solution">
+        <strong>Built &amp; Iterated:</strong>
+        <ul class="styled" style="margin-top:8px;">
+          <li>Initial POC: NL → schema-aware SQL → execution pipeline working end-to-end, limited to a single schema</li>
+          <li>Expanded to all available schemas; exposed schema selection accuracy issues from lack of contextual prompt parsing</li>
+          <li>Implemented keyword-based weighted scoring for intelligent schema selection — reliably identifies the most relevant schema. Added metadata caching to reduce redundant introspection calls</li>
+          <li>Integrated Hugging Face embeddings for semantic table matching; OpenAI API interprets query results into plain-language summaries for non-technical operators</li>
+        </ul>
+      </div>
+      <div class="project-outcome"><strong>Status:</strong> Active POC. Each iteration measurably improved query accuracy and reduced noise. Uses Hugging Face embeddings for semantic schema/table matching and OpenAI API for natural language result interpretation. Foundation for AI-assisted admin tooling across the Meltek platform.</div>
       <div class="project-tech">
-        <span class="tech-chip">LLMs</span><span class="tech-chip">Python</span>
-        <span class="tech-chip">PostgreSQL</span><span class="tech-chip">OpenAI API</span>
+        <span class="tech-chip">OpenAI API</span><span class="tech-chip">Hugging Face</span><span class="tech-chip">Python</span>
+        <span class="tech-chip">PostgreSQL</span><span class="tech-chip">Schema introspection</span>
+        <span class="tech-chip">Weighted scoring</span><span class="tech-chip">Metadata caching</span>
+        <span class="tech-chip">Vector embeddings</span>
       </div>
     </div>
 
@@ -861,32 +969,33 @@
     <div class="skill-group">
       <div class="skill-group-title">Languages</div>
       <div class="skill-tags">
-        <span class="skill-tag">Python 3.13</span><span class="skill-tag">TypeScript 5.9</span>
-        <span class="skill-tag">JavaScript</span><span class="skill-tag">Java</span><span class="skill-tag">SQL</span>
+        <span class="skill-tag">Python</span><span class="skill-tag">TypeScript</span>
+        <span class="skill-tag">JavaScript</span><span class="skill-tag">Java</span><span class="skill-tag">C</span><span class="skill-tag">C++</span><span class="skill-tag">SQL</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Backend</div>
       <div class="skill-tags">
-        <span class="skill-tag">Django 6</span><span class="skill-tag">Celery 5.6</span>
-        <span class="skill-tag">Node.js 25</span><span class="skill-tag">REST APIs</span>
-        <span class="skill-tag">Webhooks</span><span class="skill-tag">OAuth 2.0 / JWT</span>
+        <span class="skill-tag">Django</span><span class="skill-tag">Celery</span>
+        <span class="skill-tag">Node.js</span><span class="skill-tag">REST APIs</span>
+        <span class="skill-tag">Webhooks</span>
       </div>
     </div>
     <div class="skill-group">
-      <div class="skill-group-title">Frontend &amp; Mobile</div>
+      <div class="skill-group-title">Frontend</div>
       <div class="skill-tags">
-        <span class="skill-tag">Next.js 16 (App Router)</span><span class="skill-tag">React 19</span>
-        <span class="skill-tag">React Native 0.85</span><span class="skill-tag">Expo 55</span>
-        <span class="skill-tag">Tailwind CSS 4</span><span class="skill-tag">Turbopack</span>
-        <span class="skill-tag">next-intl (i18n, 5 locales)</span><span class="skill-tag">Bubble</span>
+        <span class="skill-tag">Next.js (App Router)</span><span class="skill-tag">React</span>
+        <span class="skill-tag">ExpressJS</span><span class="skill-tag">GraphQL</span>
+        <span class="skill-tag">HTML/CSS</span><span class="skill-tag">Bootstrap</span><span class="skill-tag">Tailwind CSS</span>
+        <span class="skill-tag">Bubble</span><span class="skill-tag">Webflow</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Cloud &amp; Infrastructure</div>
       <div class="skill-tags">
         <span class="skill-tag">Azure Container Apps</span><span class="skill-tag">Azure Functions</span>
-        <span class="skill-tag">Azure Key Vault</span><span class="skill-tag">Azure Container Registry</span>
+        <span class="skill-tag">Azure Logic Apps</span><span class="skill-tag">Azure Data Factory</span>
+        <span class="skill-tag">Azure Data Lake</span><span class="skill-tag">Azure Key Vault</span>
         <span class="skill-tag">Bicep (IaC)</span><span class="skill-tag">Docker</span>
         <span class="skill-tag">GitHub Actions</span><span class="skill-tag">CI/CD</span>
       </div>
@@ -894,8 +1003,7 @@
     <div class="skill-group">
       <div class="skill-group-title">Data</div>
       <div class="skill-tags">
-        <span class="skill-tag">PostgreSQL 15</span><span class="skill-tag">psycopg 3</span>
-        <span class="skill-tag">MySQL</span><span class="skill-tag">Redis 7</span>
+        <span class="skill-tag">PostgreSQL</span><span class="skill-tag">MySQL</span><span class="skill-tag">Redis</span>
         <span class="skill-tag">MongoDB</span><span class="skill-tag">Alembic</span>
       </div>
     </div>
@@ -903,66 +1011,34 @@
       <div class="skill-group-title">Integrations</div>
       <div class="skill-tags">
         <span class="skill-tag">GBC (Green Button)</span><span class="skill-tag">Enode</span>
-        <span class="skill-tag">Kasa API</span><span class="skill-tag">TikTok Discovery API</span>
+        <span class="skill-tag">TikTok Discovery API</span>
         <span class="skill-tag">Stripe</span><span class="skill-tag">SendGrid</span>
-        <span class="skill-tag">Twilio</span><span class="skill-tag">HelpScout</span>
+        <span class="skill-tag">Twilio</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">AI &amp; LLM</div>
       <div class="skill-tags">
         <span class="skill-tag">OpenAI API</span><span class="skill-tag">Azure OpenAI</span>
-        <span class="skill-tag">GitHub Copilot</span><span class="skill-tag">NL → SQL</span>
+        <span class="skill-tag">Microsoft Copilot Studio</span><span class="skill-tag">MCP</span>
+        <span class="skill-tag">Hugging Face</span><span class="skill-tag">GitHub Copilot</span><span class="skill-tag">NL → SQL</span>
       </div>
     </div>
     <div class="skill-group">
       <div class="skill-group-title">Testing &amp; Observability</div>
       <div class="skill-tags">
-        <span class="skill-tag">Jest 30</span><span class="skill-tag">Playwright 1.57</span>
-        <span class="skill-tag">Stryker (mutation)</span><span class="skill-tag">Sentry</span>
+        <span class="skill-tag">Sentry</span>
         <span class="skill-tag">Application Insights</span><span class="skill-tag">PostHog</span>
         <span class="skill-tag">Drata (SOC 2)</span>
       </div>
     </div>
-  </div>
-</section>
-
-<hr class="divider" />
-
-<!-- ── Experience + Education ─────────────────────────────────── -->
-<section id="experience">
-  <div class="section-label">Career</div>
-  <h2 class="section-heading">Work Experience &amp; Education</h2>
-  <div class="timeline">
-    <div class="tl-item">
-      <div class="tl-date">Jan 2024 – Present · Remote, New York, USA</div>
-      <div class="tl-title">Software Developer — Meltek Inc.</div>
-      <div class="tl-body">Backend systems, cloud workflows, data pipelines, and platform reliability for a demand response energy-tech startup. Full end-to-end ownership — from utility API integrations to production incident resolution.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">May 2023 – Aug 2023 · Remote (Intern)</div>
-      <div class="tl-title">Software Developer Intern — Meltek Inc.</div>
-      <div class="tl-body">Built 10+ API-driven workflows in Bubble.io and Azure Logic Apps. Resolved critical production issues — reducing customer support load by 50%.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">Jan 2021 – Aug 2022 · Bangalore, India</div>
-      <div class="tl-title">Senior Systems Engineer — Infosys Limited</div>
-      <div class="tl-body">Sole Full Stack Developer for Partner Management Portal — MERN stack. Supported 59% YoY revenue increase in Infosys product business.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">Oct 2019 – Dec 2020 · Bangalore, India</div>
-      <div class="tl-title">Systems Engineer — Infosys Limited</div>
-      <div class="tl-body">Java backend for Allstate Insurance's Transformative Growth Portal. Built Vehicular Insurance Line of Business independently within one year.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">Aug 2022 – Dec 2023 · Stony Brook, NY</div>
-      <div class="tl-title">M.S. Electrical &amp; Computer Engineering — Stony Brook University</div>
-      <div class="tl-body">GPA: <strong style="color:var(--green)">3.8 / 4.0</strong> · Teaching Assistant &amp; Senior Research Aide.</div>
-    </div>
-    <div class="tl-item">
-      <div class="tl-date">Aug 2015 – May 2019 · Bangalore, India</div>
-      <div class="tl-title">B.Tech ECE — Dayananda Sagar University</div>
-      <div class="tl-body">GPA: <strong style="color:var(--green)">8.82 / 10</strong> · SIH National Finalist · IEEE Publication · Hack@CEWIT Winner.</div>
+    <div class="skill-group">
+      <div class="skill-group-title">Tools &amp; Hardware</div>
+      <div class="skill-tags">
+        <span class="skill-tag">Jira</span><span class="skill-tag">Postman</span>
+        <span class="skill-tag">ServiceNow</span><span class="skill-tag">Splunk</span><span class="skill-tag">Robo3T</span>
+        <span class="skill-tag">Arduino</span><span class="skill-tag">ESP8266</span><span class="skill-tag">ESP32</span>
+      </div>
     </div>
   </div>
 </section>
@@ -1014,10 +1090,9 @@
   </p>
   <div class="contact-links">
     <a class="contact-link" href="mailto:sirinaganoor@gmail.com">✉️ sirinaganoor@gmail.com</a>
-    <a class="contact-link" href="tel:9342218595">📞 934-221-8595</a>
     <a class="contact-link" href="https://linkedin.com/in/siri-s-n" target="_blank" rel="noopener noreferrer">💼 LinkedIn</a>
     <a class="contact-link" href="https://github.com/siri-CodeforGood" target="_blank" rel="noopener noreferrer">🐙 GitHub</a>
-    <a class="contact-link" href="performance-dashboard.html" target="_blank">📊 Full Dashboard</a>
+    <a class="contact-link" href="SiriSiddalingappaNaganoor_Resume_2026.pdf" download>📄 Download Resume</a>
   </div>
 </section>
 
